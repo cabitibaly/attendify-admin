@@ -27,17 +27,7 @@ const TabLayout = () => {
                 <Tabs.Screen 
                     name="employe"                    
                     options={{
-                        headerShown: true,
-                        title: "Employés",
-                        tabBarStyle: { backgroundColor: 'transparent' },
-                        headerStyle: { backgroundColor: 'transparent' },
-                        headerTransparent: true,
-                        headerTitleStyle: { 
-                            color: '#EEEEF0', 
-                            fontSize: 28, 
-                            fontWeight: "semibold" 
-                        },
-                        headerTitleAlign: "center",
+                        headerShown: false,
                     }} 
                 />
                 <Tabs.Screen 
