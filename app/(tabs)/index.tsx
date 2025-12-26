@@ -13,7 +13,7 @@ const Accueil = () => {
         <ImageBackground
             source={require("../../assets/images/main-background.jpg")}
             resizeMode="cover"
-            className="px-4 py-4 pt-16 pb-4 flex-1 items-center justify-start gap-6"
+            className="px-4 py-4 pt-10 pb-4 flex-1 items-center justify-start gap-6"
         >
             <View className='w-full flex-row items-center justify-between'>
                 <View className='flex-col items-start justify-start'>
