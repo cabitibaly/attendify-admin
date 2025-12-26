@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import React from 'react';
 import { Image, ImageSourcePropType, Pressable, Text, View } from 'react-native';
 
@@ -11,7 +12,7 @@ interface EmployeCardProps {
 
 const EmployeCard = ({id, nom, prenom, image, poste}: EmployeCardProps) => {
     return (
-        <Pressable  className='w-full flex-row items-start justify-between gap-3'>
+        <Pressable onPress={() => router.push(`/(employes)/${id}`)} className='w-full flex-row items-start justify-between gap-3'>
             <View className='overflow-hidden size-14 rounded-full'>
                 <Image className='size-14 rounded-full' source={image} />
             </View>

@@ -14,7 +14,7 @@ const Employe = () => {
         >
             <View className='relative w-full flex-row items-center justify-center'>
                 <Text className='text-3xl text-gris-12 font-semibold'>Employés</Text>
-                <Pressable onPress={() => router.push("/")} className="absolute right-0 size-10 z-50 rounded-full bg-violet-9 items-center justify-center">
+                <Pressable onPress={() => router.push("/(employes)")} className="absolute right-0 size-10 z-50 rounded-full bg-violet-9 items-center justify-center">
                     <Plus size={28} color='#EEEEF0' />
                 </Pressable>
             </View>
