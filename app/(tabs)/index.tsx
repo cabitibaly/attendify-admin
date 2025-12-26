@@ -3,6 +3,7 @@ import AlarmOffIcon from '@/components/svg/AlarmOffIcon'
 import BellIcon from '@/components/svg/bellIcon'
 import UserRemoveIcon from '@/components/svg/userRemovedIcon'
 import UserVerifiedIcon from '@/components/svg/UserVerifiedIcon'
+import { router } from 'expo-router'
 import { Percent } from 'lucide-react-native'
 import React from 'react'
 import { ImageBackground, ScrollView, Text, TouchableOpacity, View } from 'react-native'
@@ -70,13 +71,13 @@ const Accueil = () => {
             <View className='w-full flex-1 flex-col items-start justify-center gap-4'>
                 <View className='flex-row items-center justify-between w-full'>
                     <Text className='text-xl text-gris-12 font-medium'>Historique de pointage</Text>
-                    <TouchableOpacity activeOpacity={0.8}>
+                    <TouchableOpacity onPress={() => router.push("/(historique)")} activeOpacity={0.8}>
                         <Text className='text-xl text-violet-8 font-medium'>Voir plus</Text>
                     </TouchableOpacity>
                 </View>    
                 <ScrollView 
                     className='rounded-xl'                    
-                    contentContainerStyle={{gap: 12, width: '100%', paddingBottom: 88,}}                    
+                    contentContainerStyle={{gap: 12, width: '100%', paddingBottom: 88, paddingRight: 4}}                    
                 >
                     <PointageCard />
                     <PointageCard />
