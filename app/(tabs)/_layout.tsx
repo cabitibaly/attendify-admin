@@ -1,35 +1,71 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
+import CustomNavBar from '@/components/tabbar/customTabBar'
+import { Tabs } from 'expo-router'
+import React from 'react'
+import { ImageBackground } from 'react-native'
 
-import { HapticTab } from '@/components/haptic-tab';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
-
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
-  return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
-    </Tabs>
-  );
+const TabLayout = () => {
+    return (
+        <ImageBackground
+            source={require("../../assets/images/main-background.jpg")}
+            resizeMode="cover"
+            className="flex-1  w-full h-full"
+        >            
+            <Tabs  
+                tabBar={(props) => <CustomNavBar {...props} />}
+                screenOptions={{                    
+                    tabBarStyle: { backgroundColor: 'transparent' },
+                }}
+            >
+                <Tabs.Screen 
+                    name="index" 
+                    options={{
+                        headerShown: false,
+                        title: "Accueil",
+                        tabBarShowLabel: false,                    
+                    }} 
+                />
+                <Tabs.Screen 
+                    name="employe"                    
+                    options={{
+                        headerShown: true,
+                        title: "Employés",
+                        tabBarStyle: { backgroundColor: 'transparent' },
+                        headerStyle: { backgroundColor: 'transparent' },
+                        headerTransparent: true,
+                        headerTitleStyle: { 
+                            color: '#EEEEF0', 
+                            fontSize: 28, 
+                            fontWeight: "semibold" 
+                        },
+                        headerTitleAlign: "center",
+                    }} 
+                />
+                <Tabs.Screen 
+                    name="conge"                    
+                    options={{
+                        headerShown: true,
+                        title: "congés",
+                        tabBarStyle: { backgroundColor: 'transparent' },
+                        headerStyle: { backgroundColor: 'transparent' },
+                        headerTransparent: true,
+                        headerTitleStyle: { 
+                            color: '#EEEEF0', 
+                            fontSize: 28, 
+                            fontWeight: "semibold" 
+                        },
+                        headerTitleAlign: "center",
+                    }} 
+                />
+                <Tabs.Screen 
+                    name="profile"
+                    options={{
+                        headerShown: false,
+                        title: "Profile"
+                    }} 
+                />
+            </Tabs>            
+        </ImageBackground>
+    )
 }
+
+export default TabLayout
