@@ -1,13 +1,23 @@
 import { Stack } from 'expo-router'
 import React from 'react'
 
-const EmployesLayout = () => {
+const EmployesLayout = () => {    
+
     return (
-        <Stack>
+        <Stack
+            screenOptions={{
+                contentStyle: {
+                    backgroundColor: "#1A132C"
+                }
+            }}
+        >
             <Stack.Screen 
                 name="index" 
                 options={{
-                    headerShown: false,                  
+                    headerShown: false,
+                    contentStyle: {
+                        backgroundColor: "#1A132C"
+                    }                 
                 }}
             />
         </Stack>
