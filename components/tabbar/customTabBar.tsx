@@ -14,7 +14,7 @@ const CustomNavBar: React.FC<BottomTabBarProps> = ({
   navigation,
 }) => {
     return (
-        <View className="absolute bottom-10 flex-row items-center justify-between w-[90%] self-center bg-violet-5/50 rounded-full px-0 py-0">
+        <View className="absolute bottom-10 flex-row items-center justify-between w-[90%] self-center bg-violet-5 rounded-full px-0 py-0">
             {state.routes.map((route, index) => {
                 if (["_sitemap", "+not-found"].includes(route.name)) return null;
 
@@ -45,7 +45,7 @@ const CustomNavBar: React.FC<BottomTabBarProps> = ({
                         layout={LinearTransition.springify().mass(0.5)}
                         key={route.key}
                         onPress={onPress}
-                        style={{ backgroundColor: isFocused ? "#441C7F" : "transparent" }}
+                        style={{ backgroundColor: isFocused ? "#7541CD" : "transparent" }}
                         className={"flex-row justify-center items-center px-5 py-4 rounded-full"}
                     >
                         {getIconByRouteName(
