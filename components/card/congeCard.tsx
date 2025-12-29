@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import React from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 
@@ -35,7 +36,7 @@ const CongeCard = ({ id, statut }: CongeCardProps) => {
     }
 
     return (
-        <TouchableOpacity activeOpacity={0.8} className="p-4 w-full bg-violet-5/50 rounded-xl flex-col items-center justify-center gap-4">
+        <TouchableOpacity onPress={() => router.push(`/(stack)/conge/${id}`)} activeOpacity={0.8} className="p-4 w-full bg-violet-5/50 rounded-xl flex-col items-center justify-center gap-4">
             <View className='flex-row items-center justify-between w-full'>
                 <View className='flex-row items-center justify-center gap-3'>
                     <View className='overflow-hidden size-14 rounded-full'>
@@ -46,7 +47,7 @@ const CongeCard = ({ id, statut }: CongeCardProps) => {
                         <Text className='text-base text-gris-11 font-regular line-clamp-1'>Nettoyeur</Text>                    
                     </View>                
                 </View>
-                <View style={{backgroundColor: statusBg(),}} className='rounded-lg p-2 bg-jaune/40 items-center justify-center'>
+                <View style={{backgroundColor: statusBg(),}} className='rounded-lg p-2 items-center justify-center'>
                     <Text style={{color: statusColor()}} className='text-sm font-semibold'>{statut}</Text>
                 </View>
             </View>
