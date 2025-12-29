@@ -6,15 +6,11 @@ import UserVerifiedIcon from '@/components/svg/UserVerifiedIcon'
 import { router } from 'expo-router'
 import { Percent } from 'lucide-react-native'
 import React from 'react'
-import { ImageBackground, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
 
 const Accueil = () => {
     return (
-        <ImageBackground
-            source={require("../../assets/images/main-background.jpg")}
-            resizeMode="cover"
-            className="px-4 py-4 pt-10 pb-4 flex-1 items-center justify-start gap-6"
-        >
+        <View className="px-4 py-4 pt-10 pb-4 flex-1 items-center justify-start gap-6">
             <View className='w-full flex-row items-center justify-between'>
                 <View className='flex-col items-start justify-start'>
                     <Text className='text-xl text-gris-12 font-regular'>Bonjour,</Text>
@@ -85,7 +81,7 @@ const Accueil = () => {
                     <PointageCard />
                 </ScrollView>            
             </View>
-        </ImageBackground>
+        </View>
     )
 }
 
