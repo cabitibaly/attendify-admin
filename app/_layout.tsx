@@ -49,6 +49,7 @@ export default function RootLayout() {
                     <Stack.Screen name="(tabs)" />
                     <Stack.Screen name="(historique)" />
                     <Stack.Screen name="(stack)" />
+                    <Stack.Screen name="(site)" />
                 </Stack>
             </BottomSheetModalProvider>
         </GestureHandlerRootView>
