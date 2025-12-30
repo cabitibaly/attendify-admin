@@ -22,7 +22,7 @@ const ListeDesSites = () => {
                     <ChevronLeft strokeWidth={1.75} size={28} color='#EEEEF0' />
                 </Pressable>
                 <Text className='text-3xl text-gris-12 font-semibold'>Liste des sites</Text>
-                <Pressable onPress={() => router.push("/(site)/nouveauSite")} className="size-10 z-50 rounded-full bg-violet-9 items-center justify-center">
+                <Pressable onPress={() => router.push("/(site)/nouveau-site")} className="size-10 z-50 rounded-full bg-violet-9 items-center justify-center">
                     <Plus size={28} color='#EEEEF0' />
                 </Pressable>
             </View>

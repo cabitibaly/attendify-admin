@@ -12,7 +12,7 @@ const SiteLayout = () => {
                 name="index"
             />
             <Stack.Screen 
-                name="nouveauSite"
+                name="nouveau-site"
             />
         </Stack>
     )
