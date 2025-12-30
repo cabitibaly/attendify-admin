@@ -36,7 +36,7 @@ const Profile = () => {
                     </View>
                     <ArrowCircleRightIcon size={32} color='#7541CD' />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => router.push("/(tabs)")} activeOpacity={0.8} className='p-4 w-full bg-violet-5/30 rounded-xl flex-row items-center justify-between'>
+                <TouchableOpacity onPress={() => router.push("/(site)")} activeOpacity={0.8} className='p-4 w-full bg-violet-5/30 rounded-xl flex-row items-center justify-between'>
                     <View className='flex-row items-center justify-center gap-2.5'>
                         <MapPin size={28} color='#7541CD' />
                         <Text className='text-gris-12 text-xl font-medium'>Site</Text>
@@ -53,6 +53,7 @@ const Profile = () => {
             <CustomBottomSheet 
                 ref={editBottomSheetRef}
                 onClose={() => console.log('Fermé')}
+                snapPoints={["70%", "90%", "99%"]}
             >
                 <ModifierSonCompte />
             </CustomBottomSheet>

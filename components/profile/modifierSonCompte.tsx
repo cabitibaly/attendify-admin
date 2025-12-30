@@ -21,11 +21,11 @@ const ModifierSonCompte = () => {
             className="px-4 py-2" 
             keyboardShouldPersistTaps="handled" 
             contentContainerStyle={{ paddingBottom: 8 }}
-            showsVerticalScrollIndicator={false}                    
+            showsVerticalScrollIndicator={false}                            
         >
             <View className="w-full flex-col items-center justify-start gap-6">
                     <Text className="text-gris-1 text-2xl font-medium">Modifier son compte</Text>
-                    <View className="w-full flex-col items-center justify-start gap-8">
+                    <View className="w-full flex-col items-center justify-start gap-6">
                         <View className='w-full flex-col items-start justify-start gap-2'>
                             <Text className='text-xl text-gris-11 font-medium'>Nom</Text>
                             <BottomSheetTextInput 
@@ -89,7 +89,7 @@ const ModifierSonCompte = () => {
                     </View>
                 <TouchableOpacity 
                     activeOpacity={0.8} 
-                    className='mb-6 px-4 py-5 w-full rounded-full bg-violet-8 items-center justify-center'
+                    className='px-4 py-5 w-full rounded-full bg-violet-8 items-center justify-center'
                 >
                     <Text className='text-xl text-gris-12 font-medium'>Enregistrer</Text>    
                 </TouchableOpacity>
