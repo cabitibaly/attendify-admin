@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1064862802134",
+    "project_id": "attendify-ce89e",
+    "storage_bucket": "attendify-ce89e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1064862802134:android:1638296759b3440a7aa977",
+        "android_client_info": {
+          "package_name": "com.bcalex.attentify_admin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyATmJLM_UcePO7N0mibdxj3FR4O2EufwZA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

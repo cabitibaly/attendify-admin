@@ -1,8 +1,10 @@
+import toastConfig from "@/configs/toastConfig";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import Toast from "react-native-toast-message";
 import "../global.css";
 
 
@@ -42,16 +44,22 @@ export default function RootLayout() {
     }
 
     return (
-        <GestureHandlerRootView style={{ flex: 1 }}>
-            <BottomSheetModalProvider>
-                <Stack screenOptions={{headerShown: false}}>
-                    <Stack.Screen name="index" />
-                    <Stack.Screen name="(tabs)" />
-                    <Stack.Screen name="(historique)" />
-                    <Stack.Screen name="(stack)" />
-                    <Stack.Screen name="(site)" />
-                </Stack>
-            </BottomSheetModalProvider>
-        </GestureHandlerRootView>
+        <>
+            <GestureHandlerRootView style={{ flex: 1 }}>
+                <BottomSheetModalProvider>
+                    <Stack screenOptions={{headerShown: false}}>
+                        <Stack.Screen name="index" />
+                        <Stack.Screen name="(tabs)" />
+                        <Stack.Screen name="(historique)" />
+                        <Stack.Screen name="(stack)" />
+                        <Stack.Screen name="(site)" />
+                    </Stack>
+                </BottomSheetModalProvider>
+            </GestureHandlerRootView>
+            <Toast 
+                config={toastConfig}
+                visibilityTime={3000}
+            />
+        </>
     );
 }
