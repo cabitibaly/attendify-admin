@@ -1,14 +1,40 @@
 import PointageCard from '@/components/card/pointageCard'
+import CustomBottomSheet, { CustomBottomSheetRef } from '@/components/custom-bottom-sheet/customBottomSheet'
+import NotificationPermission from '@/components/permission/notification-permission'
 import AlarmOffIcon from '@/components/svg/AlarmOffIcon'
 import BellIcon from '@/components/svg/bellIcon'
 import UserRemoveIcon from '@/components/svg/userRemovedIcon'
 import UserVerifiedIcon from '@/components/svg/UserVerifiedIcon'
+import { usePushNotification } from '@/hooks/notification-push/usePushNotification'
+import { checkNotificationPermisison } from '@/utils/notification'
+import { hasPermissionBeenAsked } from '@/utils/storage'
 import { router } from 'expo-router'
 import { Percent } from 'lucide-react-native'
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
 
 const Accueil = () => {
+    const { expoPushToken  } = usePushNotification()
+    const notifBottomSheetRef = useRef<CustomBottomSheetRef>(null);    
+
+    useEffect(() => {        
+
+        (
+            async () => {
+                const asked = await hasPermissionBeenAsked();
+                const granted = await checkNotificationPermisison();                            
+
+                if (!asked && !granted) {
+                    setTimeout(() => notifBottomSheetRef.current?.open(), 500);
+                }
+            }
+        )()
+
+        console.log(expoPushToken)
+
+    }, [])
+
+
     return (
         <View className="px-4 py-4 pt-10 pb-4 flex-1 items-center justify-start gap-6">
             <View className='w-full flex-row items-center justify-between'>
@@ -18,7 +44,7 @@ const Accueil = () => {
                 </View>
                 <View className='relative size-14 rounded-full bg-violet-5 items-center justify-center'>
                     <BellIcon size={28} />
-                    <View className='absolute top-0 right-0 size-4 bg-gris-12 rounded-full' />
+                    <View className='absolute top-1 right-1 size-2.5 bg-gris-12 rounded-full' />
                 </View>
             </View>
             <View className='w-full flex-col items-start justify-center gap-4'>
@@ -81,6 +107,15 @@ const Accueil = () => {
                     <PointageCard />
                 </ScrollView>            
             </View>
+            <CustomBottomSheet 
+                ref={notifBottomSheetRef}
+                onClose={() => console.log('Fermé')}
+                snapPoints={["47%"]}
+            >   
+                <NotificationPermission 
+                    onClose={ () => {notifBottomSheetRef.current?.close()}}
+                />
+            </CustomBottomSheet>
         </View>
     )
 }
