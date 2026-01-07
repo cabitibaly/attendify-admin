@@ -95,6 +95,16 @@ export const authenticatedRequest = async <T = any>(
             return null
         }
 
+        if (axiosError.response?.status !== 401) {
+            Toast.show({
+                type: 'error',
+                text1: 'Erreur',
+                text2: axiosError.response?.data.error,
+            })
+
+            return null
+        }
+
         if (axiosError.response?.status === 401 && retryOnce) {
             console.log("Récupération d'un refresh_token...")
             const newAccessToken = await refreshAccessToken()
@@ -102,7 +112,7 @@ export const authenticatedRequest = async <T = any>(
             if (newAccessToken) {
                 return authenticatedRequest(config, false)
             }
-        }
+        }        
 
         console.log("Erreur récupération token refresh:", error)
 

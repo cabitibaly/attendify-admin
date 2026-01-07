@@ -2,18 +2,22 @@ import PointageCard from '@/components/card/pointageCard'
 import CustomBottomSheet, { CustomBottomSheetRef } from '@/components/custom-bottom-sheet/customBottomSheet'
 import CustomCalendar from '@/components/datepicker/customCalendar'
 import DatePicker from '@/components/datepicker/datePicker'
+import RenderFooter from '@/components/footer/renderFooter'
+import Loading from '@/components/loading/loading'
 import ExportIcon from '@/components/svg/exportIcon'
+import { useFetchPointage } from '@/hooks/pointage/useFetchPointage'
 import { BottomSheetView } from '@gorhom/bottom-sheet'
 import { router } from 'expo-router'
 import { ChevronLeft } from 'lucide-react-native'
 import React, { useRef, useState } from 'react'
-import { ImageBackground, Pressable, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, ImageBackground, Pressable, Text, TouchableOpacity, View } from 'react-native'
 
 const Historique = () => {
     const [selected, setSelected] = useState<string>('')
     const [dateDebut, setDateDebut] = useState<string>('')
     const [dateFin, setDateFin] = useState<string>('')
     const bottomSheetRef = useRef<CustomBottomSheetRef>(null);
+    const { pointages, isFetchingNextPage, handleLoadMore, isLoading }  = useFetchPointage(selected == "", new Date(selected).toISOString());
 
     return (
         <ImageBackground
@@ -31,15 +35,28 @@ const Historique = () => {
                 </Pressable>
             </View> 
             <CustomCalendar selectedDate={selected} setSelectedDate={setSelected} />   
-            <ScrollView 
-                className='rounded-xl'                    
-                contentContainerStyle={{gap: 12, width: '100%', paddingRight: 4}}                    
-            >
-                <PointageCard />
-                <PointageCard />
-                <PointageCard />
-                <PointageCard />
-            </ScrollView>
+            <View className='w-full rounded-xl'>
+                {
+                    isLoading ?
+                        <Loading />   
+                        :   
+                            pointages.length === 0 ?
+                                <Text className='text-xl text-gris-12 font-medium'>Aucun pointage trouvé</Text>
+                                :
+                                <FlatList 
+                                    data={pointages}                    
+                                    renderItem={({item}) => <PointageCard pointage={item} />}
+                                    keyExtractor={(item) => item.id.toString()}
+                                    className='w-full'
+                                    ListFooterComponent={<RenderFooter isFetchingNextPage={isFetchingNextPage} />}
+                                    showsVerticalScrollIndicator={false}
+                                    initialNumToRender={10}
+                                    maxToRenderPerBatch={10}
+                                    removeClippedSubviews={true}
+                                    updateCellsBatchingPeriod={50}
+                                />
+                }
+            </View>
             <CustomBottomSheet
                 ref={bottomSheetRef}
                 onClose={() => console.log('fermé')}
