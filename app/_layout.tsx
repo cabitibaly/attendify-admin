@@ -1,11 +1,15 @@
 import toastConfig from "@/configs/toastConfig";
+import AuthProvider from "@/contexts/authContext/authProvider";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Toast from "react-native-toast-message";
 import "../global.css";
+
+const client = new QueryClient()
 
 
 SplashScreen.preventAutoHideAsync();
@@ -47,13 +51,17 @@ export default function RootLayout() {
         <>
             <GestureHandlerRootView style={{ flex: 1 }}>
                 <BottomSheetModalProvider>
-                    <Stack screenOptions={{headerShown: false}}>
-                        <Stack.Screen name="index" />
-                        <Stack.Screen name="(tabs)" />
-                        <Stack.Screen name="(historique)" />
-                        <Stack.Screen name="(stack)" />
-                        <Stack.Screen name="(site)" />
-                    </Stack>
+                    <QueryClientProvider client={client}>
+                        <AuthProvider>
+                            <Stack screenOptions={{headerShown: false}}>
+                                <Stack.Screen name="(auth)" />
+                                <Stack.Screen name="(tabs)" />
+                                <Stack.Screen name="(historique)" />
+                                <Stack.Screen name="(stack)" />
+                                <Stack.Screen name="(site)" />
+                            </Stack>
+                        </AuthProvider>
+                    </QueryClientProvider>
                 </BottomSheetModalProvider>
             </GestureHandlerRootView>
             <Toast 

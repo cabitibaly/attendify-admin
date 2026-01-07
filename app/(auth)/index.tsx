@@ -1,14 +1,25 @@
+import Loading from '@/components/loading/loading';
 import { useAuth } from '@/hooks/auth/useAuth';
 import React, { useState } from 'react';
 import { ActivityIndicator, ImageBackground, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import Toast from 'react-native-toast-message';
 
 const Index = () => {
     const [username, setUsername] = useState<string>('')
     const [motDePasse, setMotDePasse] = useState<string>('')
     const [isLoading, setIsLoading] = useState<boolean>(false)
-    const { login } = useAuth()
+    const { login, isLoading: isAuthenticating } = useAuth()
 
     const handleConnexion = async () => {
+        if(username.length === 0 || motDePasse.length === 0) {
+            Toast.show({
+                type: 'error',
+                text1: 'Erreur',
+                text2: "Veuillez remplir tous les champs",
+            })
+            return
+        }
+
         setIsLoading(true)
 
         try {            
@@ -23,9 +34,21 @@ const Index = () => {
         }
     }
 
+    if (isAuthenticating && !username && !motDePasse) {
+        return (
+            <ImageBackground
+                source={require("../../assets/images/connexion-background.jpg")}
+                resizeMode="cover"
+                className="p-4 flex-1 items-center justify-center bg-violet-4"
+            >
+                <Loading />
+            </ImageBackground>
+        )
+    }
+
     return (
         <ImageBackground
-            source={require("../assets/images/connexion-background.jpg")}
+            source={require("../../assets/images/connexion-background.jpg")}
             resizeMode="cover"
             className="p-4 flex-1 items-center justify-center bg-violet-4"
         >
@@ -41,10 +64,16 @@ const Index = () => {
                         <TextInput value={motDePasse} onChangeText={setMotDePasse} secureTextEntry className='w-full bg-violet-5/50 px-4 py-4 rounded-2xl text-xl text-gris-12' placeholderTextColor={"#5F606A"} placeholder='Mot de passe' />
                     </View>                    
                 </View>
-                <TouchableOpacity onPress={handleConnexion} activeOpacity={0.6} className='bg-violet-8 w-full py-4 px-8 rounded-2xl items-center justify-center'>                    
+                <TouchableOpacity 
+                    disabled={isLoading} 
+                    onPress={handleConnexion} 
+                    activeOpacity={0.6} 
+                    style={{backgroundColor: isLoading ? "#441C7F" : "#7541CD"}}
+                    className='bg-violet-8 w-full py-4 px-8 rounded-2xl items-center justify-center'
+                >                    
                     {
                         isLoading ? 
-                            <ActivityIndicator size="large" color="#EEEEF0" /> : <Text className='text-gris-12 text-xl font-semibold'>Se connecter</Text>
+                            <ActivityIndicator size={24} color="#EEEEF0" /> : <Text className='text-gris-12 text-xl font-semibold'>Se connecter</Text>
                     }
                 </TouchableOpacity>
             </View>

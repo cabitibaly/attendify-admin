@@ -5,6 +5,7 @@ import AlarmOffIcon from '@/components/svg/AlarmOffIcon'
 import BellIcon from '@/components/svg/bellIcon'
 import UserRemoveIcon from '@/components/svg/userRemovedIcon'
 import UserVerifiedIcon from '@/components/svg/UserVerifiedIcon'
+import { useAuth } from '@/hooks/auth/useAuth'
 import { usePushNotification } from '@/hooks/notification-push/usePushNotification'
 import { checkNotificationPermisison } from '@/utils/notification'
 import { hasPermissionBeenAsked } from '@/utils/storage'
@@ -15,7 +16,8 @@ import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
 
 const Accueil = () => {
     const { expoPushToken  } = usePushNotification()
-    const notifBottomSheetRef = useRef<CustomBottomSheetRef>(null);    
+    const notifBottomSheetRef = useRef<CustomBottomSheetRef>(null);
+    const { utilisateur } = useAuth();    
 
     useEffect(() => {        
 
@@ -28,9 +30,7 @@ const Accueil = () => {
                     setTimeout(() => notifBottomSheetRef.current?.open(), 500);
                 }
             }
-        )()
-
-        console.log(expoPushToken)
+        )()                
 
     }, [])
 
@@ -40,7 +40,7 @@ const Accueil = () => {
             <View className='w-full flex-row items-center justify-between'>
                 <View className='flex-col items-start justify-start'>
                     <Text className='text-xl text-gris-12 font-regular'>Bonjour,</Text>
-                    <Text className='text-2xl text-gris-12 font-bold'>Corvus Arkha</Text>
+                    <Text className='text-2xl text-gris-12 font-bold'>{utilisateur?.nom} {utilisateur?.prenom}</Text>
                 </View>
                 <View className='relative size-14 rounded-full bg-violet-5 items-center justify-center'>
                     <BellIcon size={28} />

@@ -1,6 +1,6 @@
 import { LoginData, ResponseLoginData, Utilisateur } from "@/interfaces/utilisateur"
 import DEV_API_URL from "@/utils/api"
-import { authenticatedRequest, getUserInformations, removeTokens, setTokens } from "@/utils/authUtils"
+import { authenticatedRequest, getToken, getUserInformations, removeTokens, setTokens } from "@/utils/authUtils"
 import { useQuery } from "@tanstack/react-query"
 import { router } from "expo-router"
 import { ReactNode, useState } from "react"
@@ -13,13 +13,13 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const { isLoading } = useQuery({
         queryKey: ['utilisateur'],
-        queryFn:  async () => await getUserInformations(setUtilisateur),
+        queryFn:  async () => await getUserInformations(setUtilisateur, setIsAuthenticated),
         staleTime: 60 * 60 * 1000,
     })
 
     const login = async (loginData: LoginData): Promise<void> => {        
         const data = await authenticatedRequest<ResponseLoginData>({
-            url: `${DEV_API_URL}/auth/connexion`,
+            url: `${DEV_API_URL}/auth/connexion-admin`,
             method: 'POST',
             data: loginData,
         })
@@ -28,37 +28,37 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         setTokens(data.access_token, data.refresh_token)
         setUtilisateur(data.utilisateur)
+        setIsAuthenticated(true)
 
         Toast.show({
             type: 'success',
             text1: 'Connexion',
             text2: "Connexion réussie",
         })
-
-        setTimeout(() => {
-            router.push("/")
-        }, 3000)
+        
+        router.replace("/(tabs)")        
     }
 
     const logout = async (): Promise<void> => {
+        const refresh_token = await getToken("REFRESH")
+
         const data = await authenticatedRequest<{status: number, message: string}>({
             url: `${DEV_API_URL}/auth/deconnexion`,
-            method: 'DELETE',
-        })
+            method: 'POST',
+            data: { refresh_token }
+        })        
 
         if (!data) return
 
+        setUtilisateur(null)
+        setIsAuthenticated(false)
         removeTokens()
+
         Toast.show({
             type: 'success',
             text1: 'Déconnexion',
             text2: data.message,
-        })
-
-        setTimeout(() => {
-            router.push("/")
-        }, 3000)
-
+        })        
     }
 
     return (
@@ -66,7 +66,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
             value={{
                 utilisateur,
                 isLoading,
-                isAuthenticated: !!utilisateur?.id,
+                isAuthenticated,
                 login,
                 logout,
             }}
@@ -75,3 +75,5 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
         </AuthContext.Provider>
     )
 }
+
+export default AuthProvider

@@ -1,3 +1,4 @@
+import { ApiError } from "@/interfaces/apiError"
 import { Utilisateur } from "@/interfaces/utilisateur"
 import axios, { AxiosError, AxiosRequestConfig } from "axios"
 import { router } from "expo-router"
@@ -34,9 +35,9 @@ export const refreshAccessToken = async (): Promise<string | null> => {
 
     if (!refresh_token) {
         console.log("Aucun refresh token trouvé")
-        router.push("/")
+        router.replace("/(auth)")
         return null
-    }
+    }    
 
     try {
         const res = await axios.post(
@@ -54,7 +55,7 @@ export const refreshAccessToken = async (): Promise<string | null> => {
     } catch (error) {
         console.log("Erreur récupération token refresh:", error)
         await removeTokens()
-        router.push("/")
+        router.replace("/(auth)")
         return null
     }
 }
@@ -64,12 +65,13 @@ export const authenticatedRequest = async <T = any>(
     retryOnce = true,
 ): Promise<T | null> => {
     let accessToken = await getToken("ACCESS")
+    const NO_ACCESS_TOKEN = `${DEV_API_URL}/auth/connexion-admin`
 
-    if (!accessToken) {
+    if (!accessToken && config.url !== NO_ACCESS_TOKEN) {
         console.log("Aucun access token trouvé")
-        router.push("/")
+        router.replace("/(auth)")
         return null
-    }
+    }    
 
     try {
         const res = await axios.request<T>({
@@ -82,7 +84,16 @@ export const authenticatedRequest = async <T = any>(
 
         return res.data
     } catch (error) {
-        const axiosError = error as AxiosError
+        const axiosError = error as AxiosError<ApiError>
+
+        if (NO_ACCESS_TOKEN === config.url) {            
+            Toast.show({
+                type: 'error',
+                text1: 'Erreur',
+                text2: axiosError.response?.data.error,
+            })
+            return null
+        }
 
         if (axiosError.response?.status === 401 && retryOnce) {
             console.log("Récupération d'un refresh_token...")
@@ -98,22 +109,27 @@ export const authenticatedRequest = async <T = any>(
         Toast.show({
             type: 'error',
             text1: 'Erreur',
-            text2: axiosError.message,
+            text2: axiosError.response?.data.error,
         })
 
         await removeTokens()
-        router.push("/")
+        router.replace("/(auth)")
         return null
     }
 }
 
-export const getUserInformations = async (setUtilisateur: React.Dispatch<React.SetStateAction<Utilisateur | null | undefined>>): Promise<Utilisateur | null> => {
+export const getUserInformations = async (
+    setUtilisateur: React.Dispatch<React.SetStateAction<Utilisateur | null | undefined>>,
+    setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>
+): Promise<Utilisateur | null> => {
     return await authenticatedRequest<{utilisateur: Utilisateur, status: number}>({
         url: `${DEV_API_URL}/compte/mes-informations`,
         method: "GET",
     }).then(data => {
         if (data?.status === 200) {
             setUtilisateur(data.utilisateur)
+            setIsAuthenticated(true)
+            router.replace("/(tabs)")
             return data.utilisateur
         }
         return null

@@ -6,13 +6,29 @@ import { EditIcon } from '@/components/svg/editIcon';
 import { LogoutIcon2 } from '@/components/svg/logoutIcon2';
 import MapPin from '@/components/svg/mapPin';
 import { PasswordIcon } from '@/components/svg/passwordIcon';
+import { useAuth } from '@/hooks/auth/useAuth';
 import { router } from 'expo-router';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 
 const Profile = () => {
+    const [isLoading, setIsLoading] = useState<boolean>(false)
     const editBottomSheetRef = useRef<CustomBottomSheetRef>(null);
     const pwdBottomSheetRef = useRef<CustomBottomSheetRef>(null);
+    const { logout, utilisateur } = useAuth();
+
+    const handleLogout = async () => {
+        setIsLoading(true)
+
+        try {
+            await logout()
+            router.replace("/(auth)")
+        } catch (error) {
+            console.error("Erreur lors de la déconnexion:", error)
+        } finally {
+            setIsLoading(false)
+        }
+    }
 
     return (
         <View className="pb-4 flex-1 items-center justify-start gap-4">
@@ -20,12 +36,19 @@ const Profile = () => {
                 <TouchableOpacity onPress={() => {editBottomSheetRef.current?.open()}} activeOpacity={0.8} className='absolute top-12 right-4 size-10 rounded-full bg-violet-9/30 items-center justify-center'>
                     <EditIcon size={20} color='#EEEEF0' />
                 </TouchableOpacity>
-                <View className='overflow-hidden size-32 rounded-full'>
-                    <Image className='size-full' source={require("../../assets/images/corvus.jpeg")} />
+                <View className='overflow-hidden size-32 rounded-full bg-violet-8'>                    
+                    {
+                        utilisateur?.image ?
+                            <Image className='size-full' source={{ uri: utilisateur?.image }} /> 
+                            : 
+                            <Text className='text-gris-1 text-2xl font-bold'>
+                                {utilisateur?.prenom.charAt(0).toUpperCase()}
+                            </Text>
+                    }
                 </View>
                 <View className='w-full flex-col items-center justify-center gap-1'>
-                    <Text className='text-gris-12 text-4xl font-bold'>Corvus Arkha</Text>
-                    <Text className='text-gris-12 text-xl font-regular'>Directeur</Text>
+                    <Text className='text-gris-12 text-4xl font-bold'>{utilisateur?.nom} {utilisateur?.prenom}</Text>
+                    <Text className='text-gris-12 text-xl font-regular'>{utilisateur?.poste}</Text>
                 </View>
             </View>
             <View className='w-full p-4 flex-col items-center justify-center gap-4'>
@@ -43,7 +66,7 @@ const Profile = () => {
                     </View>
                     <ArrowCircleRightIcon size={32} color='#7541CD' />
                 </TouchableOpacity>
-                <TouchableOpacity activeOpacity={0.8} className='p-4 w-full bg-violet-5/30 rounded-xl flex-row items-center justify-between'>
+                <TouchableOpacity disabled={isLoading} onPress={handleLogout} activeOpacity={0.8} className='p-4 w-full bg-violet-5/30 rounded-xl flex-row items-center justify-between'>
                     <View className='flex-row items-center justify-center gap-2.5'>
                         <LogoutIcon2 size={32} color='#7541CD' />
                         <Text className='text-gris-12 text-xl font-medium'>Déconnexion</Text>
@@ -58,7 +81,7 @@ const Profile = () => {
                 <ModifierSonCompte />
             </CustomBottomSheet>
             <CustomBottomSheet 
-                ref={pwdBottomSheetRef}
+                ref={pwdBottomSheetRef}                
                 onClose={() => console.log('Fermé')}
             >
                 <ModifierSonMP />
