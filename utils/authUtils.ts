@@ -84,7 +84,7 @@ export const authenticatedRequest = async <T = any>(
 
         return res.data
     } catch (error) {
-        const axiosError = error as AxiosError<ApiError>
+        const axiosError = error as AxiosError<ApiError>        
 
         if (NO_ACCESS_TOKEN === config.url) {            
             Toast.show({

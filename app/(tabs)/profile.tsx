@@ -36,12 +36,12 @@ const Profile = () => {
                 <TouchableOpacity onPress={() => {editBottomSheetRef.current?.open()}} activeOpacity={0.8} className='absolute top-12 right-4 size-10 rounded-full bg-violet-9/30 items-center justify-center'>
                     <EditIcon size={20} color='#EEEEF0' />
                 </TouchableOpacity>
-                <View className='overflow-hidden size-32 rounded-full bg-violet-8'>                    
+                <View className='overflow-hidden size-32 rounded-full bg-violet-8 items-center justify-center'>                    
                     {
                         utilisateur?.image ?
                             <Image className='size-full' source={{ uri: utilisateur?.image }} /> 
                             : 
-                            <Text className='text-gris-1 text-2xl font-bold'>
+                            <Text className='text-gris-12 text-2xl font-bold'>
                                 {utilisateur?.prenom.charAt(0).toUpperCase()}
                             </Text>
                     }

@@ -49,6 +49,7 @@ const Historique = () => {
                                     renderItem={({item}) => <PointageCard pointage={item} />}
                                     keyExtractor={(item) => item.id.toString()}
                                     className='w-full'
+                                    contentContainerStyle={{paddingBottom: 88}}
                                     ListFooterComponent={<RenderFooter isFetchingNextPage={isFetchingNextPage} />}
                                     ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
                                     showsVerticalScrollIndicator={false}

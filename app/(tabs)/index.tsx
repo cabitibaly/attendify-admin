@@ -22,7 +22,7 @@ const Accueil = () => {
     const notifBottomSheetRef = useRef<CustomBottomSheetRef>(null);
     const { utilisateur } = useAuth();
     const { stats } = useFetchStats();  
-    const { pointages, isFetchingNextPage, isLoading }  = useFetchPointage();
+    const { pointages, isFetchingNextPage, isLoading, handleLoadMore }  = useFetchPointage();
 
     useEffect(() => {        
 
@@ -98,7 +98,7 @@ const Accueil = () => {
                             </View>
                             <Text className='text-sm text-gris-12 font-medium'>Taux de présence aujourd&apos;hui</Text>
                         </View>                                                
-                        <Text className='text-4xl text-gris-12 font-semibold'>{stats?.tauxPresence || 0}%</Text>
+                        <Text className='text-4xl text-gris-12 font-semibold'>{stats?.tauxPresence ? Math.round(stats.tauxPresence * 100) / 100 : 0}%</Text>
                     </View>
                 </View>
             </View>
@@ -118,8 +118,11 @@ const Accueil = () => {
                                 renderItem={({item}) => <PointageCard pointage={item} />}
                                 keyExtractor={(item) => item.id.toString()}
                                 className='w-full'
+                                contentContainerStyle={{paddingBottom: 88}}
                                 ListFooterComponent={<RenderFooter isFetchingNextPage={isFetchingNextPage} />}
                                 ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
+                                onEndReached={handleLoadMore}
+                                onEndReachedThreshold={0.5}
                                 windowSize={5}
                                 showsVerticalScrollIndicator={false}
                                 initialNumToRender={10}

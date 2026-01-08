@@ -68,7 +68,7 @@ export const useFetchPointage = (aujourdhui = true, date?: string, utilisateurID
     const { data, isLoading, hasNextPage,  isFetchingNextPage, fetchNextPage, refetch } = useInfiniteQuery<PointageResponse | null>({
         queryKey: ['pointages', aujourdhui, date, utilisateurID],
         initialPageParam: 1,
-        queryFn: async ({ pageParam }) => fetchPointages(pageParam as number, 10, aujourdhui, date, utilisateurID),
+        queryFn: async ({ pageParam }) => await fetchPointages(pageParam as number, 10, aujourdhui, date, utilisateurID),
         getNextPageParam: (lastPage, allPages) => lastPage?.hasNextPage ? allPages.length + 1 : undefined,
         staleTime: 5 * 60 * 1000,
     })
