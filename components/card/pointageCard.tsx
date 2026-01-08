@@ -12,7 +12,7 @@ interface PointageCardProps {
 const PointageCard = ({pointage}: PointageCardProps) => {    
 
     return (
-        <View className='p-2.5 bg-violet-5/40 w-full rounded-xl flex-row items-center justify-between gap-2'>                
+        <View className='mb-0 p-2.5 bg-violet-5/40 w-full rounded-xl flex-row items-center justify-between gap-2'>                
             <LinearGradient
                 colors={['#5F35A6', '#3A1470']}
                 style={{

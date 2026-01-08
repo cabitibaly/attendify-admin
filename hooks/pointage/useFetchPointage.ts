@@ -63,8 +63,7 @@ const fetchPointages = async (
     })
 }
 
-export const useFetchPointage = (aujourdhui = true, date?: string, utilisateurID?: number) => {
-    // console.log(aujourdhui, date,)
+export const useFetchPointage = (aujourdhui = true, date?: string, utilisateurID?: number) => {    
 
     const { data, isLoading, hasNextPage,  isFetchingNextPage, fetchNextPage, refetch } = useInfiniteQuery<PointageResponse | null>({
         queryKey: ['pointages', aujourdhui, date, utilisateurID],

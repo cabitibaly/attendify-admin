@@ -13,11 +13,11 @@ import React, { useRef, useState } from 'react'
 import { FlatList, ImageBackground, Pressable, Text, TouchableOpacity, View } from 'react-native'
 
 const Historique = () => {
-    const [selected, setSelected] = useState<string>('')
+    const [selected, setSelected] = useState<string>(new Date().toISOString().split('T')[0])
     const [dateDebut, setDateDebut] = useState<string>('')
     const [dateFin, setDateFin] = useState<string>('')
     const bottomSheetRef = useRef<CustomBottomSheetRef>(null);
-    const { pointages, isFetchingNextPage, handleLoadMore, isLoading }  = useFetchPointage(selected == "", new Date(selected).toISOString());
+    const { pointages, isFetchingNextPage, isLoading }  = useFetchPointage(selected == "", new Date(selected).toISOString());    
 
     return (
         <ImageBackground
@@ -35,7 +35,7 @@ const Historique = () => {
                 </Pressable>
             </View> 
             <CustomCalendar selectedDate={selected} setSelectedDate={setSelected} />   
-            <View className='w-full rounded-xl'>
+            <View className='w-full rounded-xl items-center'>
                 {
                     isLoading ?
                         <Loading />   
@@ -44,16 +44,18 @@ const Historique = () => {
                                 <Text className='text-xl text-gris-12 font-medium'>Aucun pointage trouvé</Text>
                                 :
                                 <FlatList 
+                                    horizontal={false}
                                     data={pointages}                    
                                     renderItem={({item}) => <PointageCard pointage={item} />}
                                     keyExtractor={(item) => item.id.toString()}
                                     className='w-full'
                                     ListFooterComponent={<RenderFooter isFetchingNextPage={isFetchingNextPage} />}
+                                    ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
                                     showsVerticalScrollIndicator={false}
                                     initialNumToRender={10}
                                     maxToRenderPerBatch={10}
                                     removeClippedSubviews={true}
-                                    updateCellsBatchingPeriod={50}
+                                    updateCellsBatchingPeriod={50}                                
                                 />
                 }
             </View>
