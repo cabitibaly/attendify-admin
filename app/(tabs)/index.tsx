@@ -15,14 +15,14 @@ import { hasPermissionBeenAsked } from '@/utils/storage'
 import { router } from 'expo-router'
 import { Percent } from 'lucide-react-native'
 import React, { useEffect, useRef, useState } from 'react'
-import { FlatList, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, RefreshControl, Text, TouchableOpacity, View } from 'react-native'
 
 const Accueil = () => {
     const [pointageList, setPointageList] = useState<Pointage[]>([])
     const notifBottomSheetRef = useRef<CustomBottomSheetRef>(null);
     const { utilisateur } = useAuth();
     const { stats } = useFetchStats();  
-    const { pointages, isFetchingNextPage, isLoading, handleLoadMore }  = useFetchPointage();
+    const { pointages, isFetchingNextPage, isLoading, handleLoadMore, refetch }  = useFetchPointage();
 
     useEffect(() => {        
 
@@ -129,6 +129,12 @@ const Accueil = () => {
                                 maxToRenderPerBatch={10}
                                 removeClippedSubviews={true}
                                 updateCellsBatchingPeriod={50}
+                                refreshControl={
+                                    <RefreshControl 
+                                        refreshing={isLoading} 
+                                        onRefresh={refetch} 
+                                    />
+                                }
                             />
                 }
             </View>

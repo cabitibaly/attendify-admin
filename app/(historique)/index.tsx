@@ -10,14 +10,14 @@ import { BottomSheetView } from '@gorhom/bottom-sheet'
 import { router } from 'expo-router'
 import { ChevronLeft } from 'lucide-react-native'
 import React, { useRef, useState } from 'react'
-import { FlatList, ImageBackground, Pressable, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, ImageBackground, Pressable, RefreshControl, Text, TouchableOpacity, View } from 'react-native'
 
 const Historique = () => {
     const [selected, setSelected] = useState<string>(new Date().toISOString().split('T')[0])
     const [dateDebut, setDateDebut] = useState<string>('')
     const [dateFin, setDateFin] = useState<string>('')
     const bottomSheetRef = useRef<CustomBottomSheetRef>(null);
-    const { pointages, isFetchingNextPage, isLoading }  = useFetchPointage(selected == "", new Date(selected).toISOString());    
+    const { pointages, isFetchingNextPage, isLoading, refetch }  = useFetchPointage(selected == "", new Date(selected).toISOString());    
 
     return (
         <ImageBackground
@@ -56,7 +56,13 @@ const Historique = () => {
                                     initialNumToRender={10}
                                     maxToRenderPerBatch={10}
                                     removeClippedSubviews={true}
-                                    updateCellsBatchingPeriod={50}                                
+                                    updateCellsBatchingPeriod={50}  
+                                    refreshControl={
+                                        <RefreshControl 
+                                            refreshing={isLoading} 
+                                            onRefresh={refetch} 
+                                        />
+                                    }
                                 />
                 }
             </View>

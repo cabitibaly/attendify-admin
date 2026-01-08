@@ -5,10 +5,12 @@ import { Modal, Text, TouchableOpacity, View } from 'react-native'
 interface PasswordPreviewModalProps {
     visible: boolean
     onClose: () => void
-    statut: string
+    statut: number | null,
+    nomEmp: string | undefined,
+    prenomEmp: string | undefined,
 }
 
-const CongeStatutModal = ({ visible, onClose, statut }: PasswordPreviewModalProps) => {
+const CongeStatutModal = ({ nomEmp, prenomEmp, visible, onClose, statut }: PasswordPreviewModalProps) => {
 
     return (
         <Modal
@@ -19,9 +21,9 @@ const CongeStatutModal = ({ visible, onClose, statut }: PasswordPreviewModalProp
             <View className='px-4 pb-4 bg-gris-2/50 flex-1 items-center justify-end'>
                 <View className='bg-gris-12 px-8 py-8 w-full rounded-[48px] flex-col items-center justify-center gap-4'>
                     <View className='w-full flex-col gap-4 items-center justify-center'>
-                        <View style={{backgroundColor: statut === "Approuvé" ? "rgba(0, 224, 116, 0.4)" : "rgba(255, 20, 116, 0.4)"}} className='size-[60px] rounded-full bg-violet-8/30 items-center justify-center'>
+                        <View style={{backgroundColor: statut === 2 ? "rgba(0, 224, 116, 0.4)" : "rgba(255, 20, 116, 0.4)"}} className='size-[60px] rounded-full bg-violet-8/30 items-center justify-center'>
                             {
-                                statut === "Approuvé" ?
+                                statut === 2 ?
                                     <Check strokeWidth={1.5} color={"#00E074"} size={32} />
                                 :
                                     <X strokeWidth={1.5} color={"#FF1474"} size={28} />
@@ -29,10 +31,10 @@ const CongeStatutModal = ({ visible, onClose, statut }: PasswordPreviewModalProp
                         </View>
                         <View className='w-full flex-col gap-4 items-center justify-center'>
                             <Text className='text-gris-1 text-xl font-medium'>
-                                La demande a été {statut === "Approuvé" ? "approuvée" : "rejetée"}
+                                La demande a été {statut === 2 ? "approuvée" : "rejetée"}
                             </Text>
                             <Text className='text-gris-8 text-base text-center font-regular'>
-                                La demande de congé de Santa Dear a été {statut === "Approuvé" ? "approuvée avec succès" : "rejetée"}.
+                                La demande de congé de {nomEmp} {prenomEmp} a été {statut === 2 ? "approuvée avec succès" : "rejetée"}.
                             </Text>
                         </View>                        
                     </View> 
