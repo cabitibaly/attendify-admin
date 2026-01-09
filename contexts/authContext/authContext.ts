@@ -7,6 +7,7 @@ interface AuthContextType {
     isAuthenticated: boolean
     login: (loginData: LoginData) => Promise<void>
     logout: () => Promise<void>
+    refetch: () => void
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)

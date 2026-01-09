@@ -48,22 +48,22 @@ export default function RootLayout() {
     }
 
     return (
-        <>
-            <GestureHandlerRootView style={{ flex: 1 }}>
-                <BottomSheetModalProvider>
-                    <QueryClientProvider client={client}>
-                        <AuthProvider>
+        <>  
+            <QueryClientProvider client={client}>
+                <AuthProvider>
+                    <GestureHandlerRootView style={{ flex: 1 }}>
+                        <BottomSheetModalProvider>
                             <Stack screenOptions={{headerShown: false}}>
                                 <Stack.Screen name="(auth)" />
                                 <Stack.Screen name="(tabs)" />
                                 <Stack.Screen name="(historique)" />
                                 <Stack.Screen name="(stack)" />
                                 <Stack.Screen name="(site)" />
-                            </Stack>
-                        </AuthProvider>
-                    </QueryClientProvider>
-                </BottomSheetModalProvider>
-            </GestureHandlerRootView>
+                            </Stack>                            
+                        </BottomSheetModalProvider>
+                    </GestureHandlerRootView>
+                </AuthProvider>
+            </QueryClientProvider>
             <Toast 
                 config={toastConfig}
                 visibilityTime={3000}

@@ -1,20 +1,76 @@
+import { useAuth } from '@/hooks/auth/useAuth';
+import DEV_API_URL from '@/utils/api';
+import { authenticatedRequest, getToken } from '@/utils/authUtils';
 import { BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet';
-import React, { useRef, useState } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
+import Toast from 'react-native-toast-message';
 import EmailIcon from '../svg/emailIcon';
 import PhoneIcon from '../svg/phoneIcon';
 
-const ModifierSonCompte = () => {
-    const [nom, setNom] = useState("Santa");
-    const [prenom, setPrenom] = useState("Dear");
-    const [email, setEmail] = useState("santadear@gachiakuta.jp");
-    const [telephone, setTelephone] = useState("+000 00 00 00 00");
+interface RequestResponse {
+    message: string,
+    status: number, 
+}
+
+const ModifierSonCompte = ({onClose}: {onClose: () => void}) => {
+    const [nom, setNom] = useState<string>("");
+    const [prenom, setPrenom] = useState<string>("");
+    const [email, setEmail] = useState<string>("");
+    const [telephone, setTelephone] = useState<string>("");
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const { utilisateur, refetech } = useAuth();
      
     const nomRef = useRef<TextInput>(null);
     const prenomRef = useRef<TextInput>(null);
     const emailRef = useRef<TextInput>(null);
     const telephoneRef = useRef<TextInput>(null);
+
+    useEffect(() => {
+
+        if (utilisateur) {
+            setNom(utilisateur.nom)
+            setPrenom(utilisateur.prenom)
+            setEmail(utilisateur.email)
+            setTelephone(utilisateur.telephone)
+        }
+
+    }, [utilisateur])
+
+    const modifierSonCompte = async () => {
+        setIsLoading(true)
+        const refresh_token = await getToken('REFRESH')
+
+        try {
+            const data = await authenticatedRequest<RequestResponse>({
+                url: `${DEV_API_URL}/compte/modifier-un-compte`,
+                method: 'PATCH',
+                data: {
+                    nom,
+                    prenom,
+                    email,
+                    telephone,
+                    refresh_token
+                }
+            })
+
+            if (data?.status === 200) {
+                Toast.show({
+                    type: 'success',
+                    text1: 'Modification',
+                    text2: data.message,
+                })
+                
+                refetech()
+                setTimeout(() => {
+                    onClose()
+                }, 200);                
+            }
+        } catch (error) {
+            console.log("une erreur est survenue:", error)
+        } finally { setIsLoading(false) }
+    }
 
     return (
         <BottomSheetScrollView 
@@ -88,10 +144,17 @@ const ModifierSonCompte = () => {
                         </View>
                     </View>
                 <TouchableOpacity 
+                    disabled={isLoading}
+                    onPress={modifierSonCompte}
                     activeOpacity={0.8} 
                     className='px-4 py-5 w-full rounded-full bg-violet-8 items-center justify-center'
                 >
-                    <Text className='text-xl text-gris-12 font-medium'>Enregistrer</Text>    
+                    {
+                        isLoading ?
+                            <ActivityIndicator size="small" color="#EEEEF0" />
+                            :
+                            <Text className='text-xl text-gris-12 font-medium'>Enregistrer</Text>
+                    }                        
                 </TouchableOpacity>
             </View>
         </BottomSheetScrollView>

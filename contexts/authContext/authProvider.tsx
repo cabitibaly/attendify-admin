@@ -11,7 +11,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [utilisateur, setUtilisateur] = useState<Utilisateur | null | undefined>(null)
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)           
 
-    const { isLoading } = useQuery({
+    const { isLoading, refetch } = useQuery({
         queryKey: ['utilisateur'],
         queryFn:  async () => await getUserInformations(setUtilisateur, setIsAuthenticated),
         staleTime: 60 * 60 * 1000,
@@ -69,6 +69,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
                 isAuthenticated,
                 login,
                 logout,
+                refetch,
             }}
         >
             {children}

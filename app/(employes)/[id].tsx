@@ -122,12 +122,7 @@ const DetailEmploye = () => {
                             newPassword={newPassword}
                             nomEmp={employe?.nom}
                             prenomEmp={employe?.prenom}
-                        /> 
-                        {/* <SupprimerEmploye
-                            empId={employe?.id}
-                            visible={modalVisible2}
-                            onClose={() => setModalVisible2(false)}
-                        /> */}
+                        />
                         <SupprimerModal 
                             visible={modalVisible2}
                             onClose={() => {setModalVisible2(false); refetch()}}

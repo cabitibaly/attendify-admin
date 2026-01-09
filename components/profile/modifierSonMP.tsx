@@ -1,18 +1,85 @@
+import DEV_API_URL from '@/utils/api'
+import { authenticatedRequest } from '@/utils/authUtils'
 import { BottomSheetTextInput, BottomSheetView } from '@gorhom/bottom-sheet'
 import React, { useRef, useState } from 'react'
-import { Pressable, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Pressable, Text, TouchableOpacity, View } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler'
+import Toast from 'react-native-toast-message'
 import EyeIcon from '../svg/eyeIcon'
 import EyeOffIcon from '../svg/eyeOffIcon'
 
-const ModifierSonMP = () => {
-    const [ancien, setAncien] = useState("12345678");
-    const [nouveau, setNouveau] = useState("12345678");
-    const [showOld, setShowOld] = useState(false);
-    const [showNew, setShowNew] = useState(false);
+interface RequestResponse {
+    message: string,
+    status: number, 
+}
+
+const ModifierSonMP = ({onClose}: {onClose: () => void}) => {
+    const [ancien, setAncien] = useState<string>("");
+    const [nouveau, setNouveau] = useState<string>("");
+    const [showOld, setShowOld] = useState<boolean>(false);
+    const [showNew, setShowNew] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const ancienRef = useRef<TextInput>(null);
     const nouveauRef = useRef<TextInput>(null);
+
+    const modifierMotDePasse = async () => {
+        if(!ancien || !nouveau) {
+            Toast.show({
+                type: 'error',
+                text1: 'Erreur',
+                text2: "Veuillez remplir tous les champs",
+            })
+            return;
+        }
+
+        if (nouveau.length !== 8) {
+            Toast.show({
+                type: 'error',
+                text1: 'Erreur',
+                text2: "Veuillez entrer un mot de passe long",
+            })
+            return;
+        }
+
+        if (ancien === nouveau) {
+            Toast.show({
+                type: 'error',
+                text1: 'Erreur',
+                text2: "Veuillez entrer un mot de passe différent",
+            })
+            return;
+        }
+
+        setIsLoading(true)
+
+        try {
+            const data = await authenticatedRequest<RequestResponse>({
+                url: `${DEV_API_URL}/compte/modifier-son-mot-de-passe`,
+                method: 'PATCH',
+                data: {
+                    ancien,
+                    nouveau
+                }
+            })
+
+            if (data?.status === 200) {
+                Toast.show({
+                    type: 'success',
+                    text1: 'Modification',
+                    text2: data.message,
+                })
+
+                setTimeout(() => {
+                    onClose()
+                }, 200)
+            }
+            
+        } catch (error) {
+            console.log("une erreur est survenue:", error)
+        } finally { setIsLoading(false) }
+
+    }
 
     return (
         <BottomSheetView 
@@ -64,10 +131,17 @@ const ModifierSonMP = () => {
                     </View>
                 </View>
                 <TouchableOpacity 
+                    disabled={isLoading}
+                    onPress={modifierMotDePasse}
                     activeOpacity={0.8} 
                     className='mb-6 px-4 py-5 w-full rounded-full bg-violet-8 items-center justify-center'
                 >
-                    <Text className='text-xl text-gris-12 font-medium'>Enregistrer</Text>    
+                    {
+                        isLoading ?
+                            <ActivityIndicator size="small" color="#EEEEF0" />
+                            :
+                            <Text className='text-xl text-gris-12 font-medium'>Soumettre</Text>
+                    }                        
                 </TouchableOpacity>
             </View>
         </BottomSheetView>
