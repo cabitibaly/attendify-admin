@@ -1,7 +1,7 @@
 import Loading from '@/components/loading/loading'
 import PasswordPreviewModal from '@/components/modal/passwordPreviewModal'
-import SupprimerEmploye from '@/components/modal/supprimerEmploye'
-import { useFetchEmploye } from '@/hooks/employes/useFetchEmployes'
+import SupprimerModal from '@/components/modal/supprimerModal'
+import { useFetchEmploye, useFetchListEmployes } from '@/hooks/employes/useFetchEmployes'
 import DEV_API_URL from '@/utils/api'
 import { authenticatedRequest } from '@/utils/authUtils'
 import { router, Stack, useLocalSearchParams } from 'expo-router'
@@ -22,6 +22,7 @@ const DetailEmploye = () => {
     const [isLoadingRequest, setIsloadingRequest] = useState<boolean>(false)
     const [newPassword, setNewPassword] = useState<string>('')
     const { employe, isLoading } = useFetchEmploye(Number(id)) 
+    const { refetch } = useFetchListEmployes();
     
     const resetPassword = async () => {
         setIsloadingRequest(true)
@@ -122,10 +123,18 @@ const DetailEmploye = () => {
                             nomEmp={employe?.nom}
                             prenomEmp={employe?.prenom}
                         /> 
-                        <SupprimerEmploye
+                        {/* <SupprimerEmploye
                             empId={employe?.id}
                             visible={modalVisible2}
                             onClose={() => setModalVisible2(false)}
+                        /> */}
+                        <SupprimerModal 
+                            visible={modalVisible2}
+                            onClose={() => {setModalVisible2(false); refetch()}}
+                            url={`${DEV_API_URL}/compte/supprimer-un-compte/${employe?.id}`}
+                            title='Supprimer un employé'
+                            paragraph={`Êtes vous sûr de vouloir supprimer l'employé ${employe?.nom} ${employe?.prenom} ?`}
+                            goBack={true}
                         />  
                     </>                       
             }

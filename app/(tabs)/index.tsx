@@ -118,9 +118,8 @@ const Accueil = () => {
                                 renderItem={({item}) => <PointageCard pointage={item} />}
                                 keyExtractor={(item) => item.id.toString()}
                                 className='w-full'
-                                contentContainerStyle={{paddingBottom: 88}}
-                                ListFooterComponent={<RenderFooter isFetchingNextPage={isFetchingNextPage} />}
-                                ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
+                                contentContainerStyle={{paddingBottom: 88, gap: 12}}
+                                ListFooterComponent={<RenderFooter isFetchingNextPage={isFetchingNextPage} />}                                
                                 onEndReached={handleLoadMore}
                                 onEndReachedThreshold={0.5}
                                 windowSize={5}

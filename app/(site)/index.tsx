@@ -1,15 +1,14 @@
 import SiteCard from '@/components/card/siteCard'
+import RenderFooter from '@/components/footer/renderFooter'
+import { useFetchListSites } from '@/hooks/sites/useFetchSite'
 import { router } from 'expo-router'
 import { ChevronLeft, Plus } from 'lucide-react-native'
 import React from 'react'
-import { FlatList, ImageBackground, Pressable, Text, View } from 'react-native'
-
-const data = [
-    { id : 1, nom: "POWERTECH SARL Site du 22", position: "11.18958219733645, -4.314583148593074" },
-    { id : 2, nom: "POWERTECH SARL Site Belle ville", position: "11.18958219733645, -4.314583148593074" },
-]
+import { FlatList, ImageBackground, Pressable, RefreshControl, Text, View } from 'react-native'
 
 const ListeDesSites = () => {
+    const { sites, isLoading, isFetchingNextPage, handleLoadMore, refetch } = useFetchListSites()
+
     return (
         <ImageBackground
             source={
@@ -28,11 +27,25 @@ const ListeDesSites = () => {
             </View>
             <View className='w-full'>            
                 <FlatList 
-                    data={data}
-                    renderItem={({item}) => <SiteCard id={item.id}  nom={item.nom} position={item.position} />}
+                    data={sites}
+                    renderItem={({item}) => <SiteCard site={item} />}
                     keyExtractor={(item) => item.id.toString()}
                     showsVerticalScrollIndicator={false}
                     contentContainerStyle={{gap: 12, width: '100%', paddingBottom: 88, paddingRight: 4}}
+                    ListFooterComponent={<RenderFooter isFetchingNextPage={isFetchingNextPage} />}                                
+                    onEndReached={handleLoadMore}
+                    onEndReachedThreshold={0.5}
+                    windowSize={5}                    
+                    initialNumToRender={10}
+                    maxToRenderPerBatch={10}
+                    removeClippedSubviews={true}
+                    updateCellsBatchingPeriod={50}
+                    refreshControl={
+                        <RefreshControl 
+                            refreshing={isLoading} 
+                            onRefresh={refetch} 
+                        />
+                    }
                 />
             </View>
         </ImageBackground>

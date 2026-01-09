@@ -1,4 +1,3 @@
-import DEV_API_URL from '@/utils/api'
 import { authenticatedRequest } from '@/utils/authUtils'
 import { router } from 'expo-router'
 import { Trash2, X } from 'lucide-react-native'
@@ -7,9 +6,12 @@ import { ActivityIndicator, Modal, Text, TouchableOpacity, View } from 'react-na
 import Toast from 'react-native-toast-message'
 
 interface PointageModalProps {
-    visible: boolean
+    visible: boolean    
+    url: string
+    title: string
+    paragraph: string
     onClose: () => void
-    empId: number | undefined
+    goBack?: boolean
 }
 
 interface SuppressionResponse {
@@ -17,24 +19,16 @@ interface SuppressionResponse {
     status: number
 }
 
-const SupprimerEmploye = ({ empId, visible, onClose }: PointageModalProps) => {
+const SupprimerModal = ({ title, paragraph, url, visible, onClose, goBack = false }: PointageModalProps) => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
-    const supprimerEmploye = async () => {
-        if (!empId) {
-            Toast.show({
-                type: 'error',
-                text1: 'Erreur',
-                text2: "Veuillez sélectionner un employé",
-            })
-            return
-        }
+    const supprimer = async () => {
 
         setIsLoading(true)
 
         try {
             const data = await authenticatedRequest<SuppressionResponse>({
-                url: `${DEV_API_URL}/compte/supprimer-un-compte/${empId}`,
+                url: `${url}`,
                 method: 'DELETE',
             })
 
@@ -44,7 +38,9 @@ const SupprimerEmploye = ({ empId, visible, onClose }: PointageModalProps) => {
                     text1: 'Suppression',
                     text2: data.message,
                 })
-                router.back()
+                if (goBack) {
+                    router.back()
+                }
             }
 
             onClose()
@@ -70,12 +66,12 @@ const SupprimerEmploye = ({ empId, visible, onClose }: PointageModalProps) => {
                             <Trash2 color='#7E45DC' size={24} />
                         </View>
                         <View className='flex-col gap-1 items-center justify-center'>
-                            <Text className='text-gris-1 text-2xl font-medium'>Suppression employée</Text>
-                            <Text className='text-gris-8 text-xl text-center font-medium'>Êtes vous sûr de vouloir supprimer cet employé ?</Text>
+                            <Text className='text-gris-1 text-2xl font-medium'>{title}</Text>
+                            <Text className='text-gris-8 text-xl text-center font-medium'>{paragraph}</Text>
                         </View>                        
                     </View> 
                     <View className='w-full flex-col items-center justify-center gap-4'>
-                        <TouchableOpacity disabled={isLoading} onPress={supprimerEmploye} activeOpacity={0.8} className='py-4 rounded-3xl w-full bg-violet-8 items-center justify-center'>                            
+                        <TouchableOpacity disabled={isLoading} onPress={supprimer} activeOpacity={0.8} className='py-4 rounded-3xl w-full bg-violet-8 items-center justify-center'>                            
                             {
                                 isLoading ?
                                     <ActivityIndicator size="small" color="#EEEEF0" />
@@ -93,4 +89,4 @@ const SupprimerEmploye = ({ empId, visible, onClose }: PointageModalProps) => {
     )
 }
 
-export default SupprimerEmploye
+export default SupprimerModal

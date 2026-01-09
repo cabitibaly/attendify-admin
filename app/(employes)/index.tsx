@@ -1,5 +1,6 @@
 import Dropdown from '@/components/dropdown/dropdown'
 import PasswordPreviewModal from '@/components/modal/passwordPreviewModal'
+import { useFetchListEmployes } from '@/hooks/employes/useFetchEmployes'
 import DEV_API_URL from '@/utils/api'
 import { authenticatedRequest } from '@/utils/authUtils'
 import { router } from 'expo-router'
@@ -28,6 +29,7 @@ const NouveauEmploye = () => {
     const [password, setPassword] = useState<string>('')
     const [site, setSite] = useState<number | null>(null)
     const [isLoading, setIsLoading] = useState<boolean>(false)
+    const { refetch } = useFetchListEmployes();
 
     const creerUnEmploye = async () => {
         if (!site) {
@@ -68,6 +70,7 @@ const NouveauEmploye = () => {
                 setEmail("")
                 setPoste("")
                 setSite(null)
+                refetch()
             }
 
         } catch (error) {
