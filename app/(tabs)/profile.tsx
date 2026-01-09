@@ -1,4 +1,5 @@
 import CustomBottomSheet, { CustomBottomSheetRef } from '@/components/custom-bottom-sheet/customBottomSheet';
+import ImagePicker from '@/components/file-upload/imagePicker';
 import ModifierSonCompte from '@/components/profile/modifierSonCompte';
 import ModifierSonMP from '@/components/profile/modifierSonMP';
 import { ArrowCircleRightIcon } from '@/components/svg/arrowCircleRight';
@@ -7,15 +8,25 @@ import { LogoutIcon2 } from '@/components/svg/logoutIcon2';
 import MapPin from '@/components/svg/mapPin';
 import { PasswordIcon } from '@/components/svg/passwordIcon';
 import { useAuth } from '@/hooks/auth/useAuth';
+import * as DocumentPicker from 'expo-document-picker';
 import { router } from 'expo-router';
-import React, { useRef, useState } from 'react';
-import { Image, Text, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
 
 const Profile = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const editBottomSheetRef = useRef<CustomBottomSheetRef>(null);
     const pwdBottomSheetRef = useRef<CustomBottomSheetRef>(null);
+    const [image, setImage] = useState<DocumentPicker.DocumentPickerAsset | null | string>(null);
     const { logout, utilisateur } = useAuth();
+
+    useEffect(() => {
+        
+        if (utilisateur && utilisateur.image) {
+            setImage(utilisateur.image)
+        }
+
+    }, [utilisateur])
 
     const handleLogout = async () => {
         setIsLoading(true)
@@ -36,7 +47,8 @@ const Profile = () => {
                 <TouchableOpacity onPress={() => {editBottomSheetRef.current?.open()}} activeOpacity={0.8} className='absolute top-12 right-4 size-10 rounded-full bg-violet-9/30 items-center justify-center'>
                     <EditIcon size={20} color='#EEEEF0' />
                 </TouchableOpacity>
-                <View className='overflow-hidden size-32 rounded-full bg-violet-8 items-center justify-center'>                    
+                <ImagePicker image={image} setImage={setImage} />
+                {/* <View className='overflow-hidden size-32 rounded-full bg-violet-8 items-center justify-center'>                    
                     {
                         utilisateur?.image ?
                             <Image className='size-full' source={{ uri: utilisateur?.image }} /> 
@@ -45,7 +57,7 @@ const Profile = () => {
                                 {utilisateur?.prenom.charAt(0).toUpperCase()}
                             </Text>
                     }
-                </View>
+                </View> */}
                 <View className='w-full flex-col items-center justify-center gap-1'>
                     <Text className='text-gris-12 text-4xl font-bold'>{utilisateur?.nom} {utilisateur?.prenom}</Text>
                     <Text className='text-gris-12 text-xl font-regular'>{utilisateur?.poste}</Text>
