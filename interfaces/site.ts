@@ -4,6 +4,6 @@ export interface Site {
     latitude: number,
     longitude: number,
     rayon: number,
-    heureDebut: Date,
-    heureFin: Date
+    heureDebut: string,
+    heureFin: string
 }

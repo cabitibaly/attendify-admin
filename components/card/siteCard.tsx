@@ -4,7 +4,6 @@ import DEV_API_URL from '@/utils/api';
 import React, { useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import SupprimerModal from '../modal/supprimerModal';
-import MapPinIcon2 from '../svg/mapPinIcon2';
 
 interface SiteCardProps {
     site: Site
@@ -16,11 +15,15 @@ const SiteCard = ({site}: SiteCardProps) => {
 
     return (
         <>
-            <TouchableOpacity onPress={() => setModalVisible(true)} activeOpacity={0.9} className='bg-violet-5/70 p-2.5 rounded-xl w-full flex-row items-start justify-start gap-2'>
-                <MapPinIcon2 size={24} color='#EEEEF0' />
-                <View className='flex-1 flex-col items-start justify-start gap-1'>                
-                    <Text className='text-xl text-gris-12 font-medium'>{site.site}</Text>
-                    <Text className='text-base text-gris-11 font-medium'>{site.latitude}, {site.longitude}</Text>                
+            <TouchableOpacity onPress={() => setModalVisible(true)} activeOpacity={0.9} className='border border-violet-10 bg-violet-5/70 p-4 rounded-xl w-full flex-col items-start justify-start gap-2'>
+                <Text className='text-xl text-gris-12 font-bold'>{site.site}</Text>
+                <View className='flex-1 flex-row items-start justify-start gap-2'>                                    
+                    <View className='bg-violet-10 rounded-lg p-2 items-center justify-center'>
+                        <Text className='text-gris-12 text-base font-semibold'>{site.heureDebut}</Text>
+                    </View>
+                    <View className='bg-violet-10 rounded-lg p-2 items-center justify-center'>
+                        <Text className='text-gris-12 text-base font-semibold'>{site.heureFin}</Text>
+                    </View>
                 </View>            
             </TouchableOpacity>
             <SupprimerModal 

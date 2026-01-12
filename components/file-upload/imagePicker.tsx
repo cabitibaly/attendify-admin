@@ -1,9 +1,16 @@
+import DEV_API_URL from '@/utils/api';
+import { authenticatedRequest, getToken } from '@/utils/authUtils';
 import { uploadHandler } from '@/utils/uploaderHandler';
 import * as DocumentPicker from 'expo-document-picker';
 import { Camera } from 'lucide-react-native';
 import React from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
+import Toast from 'react-native-toast-message';
 
+interface RequestResponse {
+    message: string,
+    status: number, 
+}
 interface FileUpdoaldProps {
     image: DocumentPicker.DocumentPickerAsset | null | string;
     setImage: React.Dispatch<React.SetStateAction<DocumentPicker.DocumentPickerAsset | null | string>>;
@@ -22,7 +29,25 @@ const ImagePicker = ({image, setImage}: FileUpdoaldProps) => {
             const imageUplaoded = await uploadHandler(result.assets[0])
 
             if (imageUplaoded) {
-                setImage(imageUplaoded)
+                const refresh_token = await getToken('REFRESH')
+                
+                const data = await authenticatedRequest<RequestResponse>({
+                    url: `${DEV_API_URL}/compte/modifier-un-compte`,
+                    method: 'PATCH',
+                    data: {
+                        image: imageUplaoded,
+                        refresh_token
+                    }
+                })
+
+                if (data?.status === 200) {
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Modification',
+                        text2: data.message,
+                    })
+                    setImage(imageUplaoded)
+                }
             }            
         }
     }

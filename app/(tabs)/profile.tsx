@@ -48,16 +48,6 @@ const Profile = () => {
                     <EditIcon size={20} color='#EEEEF0' />
                 </TouchableOpacity>
                 <ImagePicker image={image} setImage={setImage} />
-                {/* <View className='overflow-hidden size-32 rounded-full bg-violet-8 items-center justify-center'>                    
-                    {
-                        utilisateur?.image ?
-                            <Image className='size-full' source={{ uri: utilisateur?.image }} /> 
-                            : 
-                            <Text className='text-gris-12 text-2xl font-bold'>
-                                {utilisateur?.prenom.charAt(0).toUpperCase()}
-                            </Text>
-                    }
-                </View> */}
                 <View className='w-full flex-col items-center justify-center gap-1'>
                     <Text className='text-gris-12 text-4xl font-bold'>{utilisateur?.nom} {utilisateur?.prenom}</Text>
                     <Text className='text-gris-12 text-xl font-regular'>{utilisateur?.poste}</Text>
