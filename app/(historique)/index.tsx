@@ -6,6 +6,7 @@ import RenderFooter from '@/components/footer/renderFooter'
 import Loading from '@/components/loading/loading'
 import ExportIcon from '@/components/svg/exportIcon'
 import { useFetchPointage } from '@/hooks/pointage/useFetchPointage'
+import { exportPointage } from '@/utils/exportPointage'
 import { BottomSheetView } from '@gorhom/bottom-sheet'
 import { router } from 'expo-router'
 import { ChevronLeft } from 'lucide-react-native'
@@ -18,6 +19,11 @@ const Historique = () => {
     const [dateFin, setDateFin] = useState<string>('')
     const bottomSheetRef = useRef<CustomBottomSheetRef>(null);
     const { pointages, isFetchingNextPage, isLoading, refetch }  = useFetchPointage(selected == "", new Date(selected).toISOString());    
+
+    const handleExport = async () => {
+        const fileUri = await exportPointage(dateDebut, dateFin)
+        console.log(fileUri)
+    }
 
     return (
         <ImageBackground
@@ -98,7 +104,8 @@ const Historique = () => {
                                 />
                             </View>
                         </View>
-                        <TouchableOpacity 
+                        <TouchableOpacity
+                            onPress={handleExport} 
                             activeOpacity={0.8} 
                             className='mb-6 px-4 py-4 w-full rounded-full bg-violet-8 items-center justify-center'
                         >
