@@ -59,6 +59,7 @@ export default function RootLayout() {
                                 <Stack.Screen name="(historique)" />
                                 <Stack.Screen name="(stack)" />
                                 <Stack.Screen name="(site)" />
+                                <Stack.Screen name="(notification)" />
                             </Stack>                            
                         </BottomSheetModalProvider>
                     </GestureHandlerRootView>

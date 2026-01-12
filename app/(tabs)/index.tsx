@@ -8,6 +8,7 @@ import BellIcon from '@/components/svg/bellIcon'
 import UserRemoveIcon from '@/components/svg/userRemovedIcon'
 import UserVerifiedIcon from '@/components/svg/UserVerifiedIcon'
 import { useAuth } from '@/hooks/auth/useAuth'
+import { useFetchListNotification } from '@/hooks/notification/useFetchNotification'
 import { useFetchPointage, useFetchStats } from '@/hooks/pointage/useFetchPointage'
 import { Pointage } from '@/interfaces/pointage'
 import { checkNotificationPermisison } from '@/utils/notification'
@@ -15,7 +16,7 @@ import { hasPermissionBeenAsked } from '@/utils/storage'
 import { router } from 'expo-router'
 import { Percent } from 'lucide-react-native'
 import React, { useEffect, useRef, useState } from 'react'
-import { FlatList, RefreshControl, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, Pressable, RefreshControl, Text, TouchableOpacity, View } from 'react-native'
 
 const Accueil = () => {
     const [pointageList, setPointageList] = useState<Pointage[]>([])
@@ -23,6 +24,7 @@ const Accueil = () => {
     const { utilisateur } = useAuth();
     const { stats } = useFetchStats();  
     const { pointages, isFetchingNextPage, isLoading, handleLoadMore, refetch }  = useFetchPointage();
+    const { hasNoReadNotifications } = useFetchListNotification();
 
     useEffect(() => {        
 
@@ -54,10 +56,10 @@ const Accueil = () => {
                     <Text className='text-xl text-gris-12 font-regular'>Bonjour,</Text>
                     <Text className='text-2xl text-gris-12 font-bold'>{utilisateur?.nom} {utilisateur?.prenom}</Text>
                 </View>
-                <View className='relative size-14 rounded-full bg-violet-5 items-center justify-center'>
+                <Pressable onPress={() => router.push('/(notification)')}  className='relative size-14 rounded-full bg-violet-5 items-center justify-center'>
                     <BellIcon size={28} />
-                    <View className='absolute top-1 right-1 size-2.5 bg-gris-12 rounded-full' />
-                </View>
+                    { hasNoReadNotifications && <View className='absolute top-1 right-1 size-2.5 bg-gris-12 rounded-full' />}
+                </Pressable>
             </View>
             <View className='w-full flex-col items-start justify-center gap-4'>
                 <Text className='text-xl text-gris-12 font-medium'>{new Date().toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</Text>
