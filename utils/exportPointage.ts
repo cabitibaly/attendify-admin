@@ -1,51 +1,68 @@
-import * as FileSystem from 'expo-file-system/legacy';
+import { Directory, File, Paths } from 'expo-file-system';
+import { router } from 'expo-router';
+import * as Sharing from 'expo-sharing';
 import Toast from 'react-native-toast-message';
 import DEV_API_URL from './api';
-import { authenticatedRequest } from './authUtils';
+import { getToken, refreshAccessToken, removeTokens } from './authUtils';
 
-export const exportPointage = async (debut: string, fin: string): Promise<string> => {
+export const exportToExcel = async (debut: string, fin: string, retryOnce = true) => {
+
+    if (!debut || !fin) {
+        Toast.show({
+            type: 'error',
+            text1: 'Erreur',
+            text2: "Veuillez sélectionner une date de début et une date de fin",
+        })
+        return
+    }
+
     const debutParsed = new Date(debut).toISOString()
     const finParsed = new Date(fin).toISOString()
 
-    const data = await authenticatedRequest({
-        url: `${DEV_API_URL}/pointage/export?debut=${debutParsed}&fin=${finParsed}`,
-        method: 'GET',
-        responseType: 'arraybuffer'
-    })    
+    try {
+        
+        const cacheDir = new Directory(Paths.cache, 'temp');    
+        cacheDir.create();
 
-    const base64 = arrayBufferToBase64(data);
-    const fileName = `pointages-${debutParsed.split('T')[0]}-${finParsed.split('T')[0]}.xlsx`;
-    const fileUri = `${FileSystem.documentDirectory}${fileName}`;
+        const tempFile = await File.downloadFileAsync(
+            `${DEV_API_URL}/pointage/export?debut=${debutParsed}&fin=${finParsed}`, 
+            cacheDir, 
+            {
+                headers: {"Authorization": `Bearer ${await getToken("ACCESS")}`,}
+            }
+        );
+        
+        await Sharing.shareAsync(tempFile.uri);
 
-    await FileSystem.writeAsStringAsync(fileUri, base64, { encoding: 'base64' });
-    
-    Toast.show({
-        type: 'success',
-        text1: 'Export',
-        text2: "Pointages exportés",
-    })
+        cacheDir.delete();    
 
-    return fileUri;
+    } catch (error: any) {
+
+        if (!error.message?.includes('status: 401')) {
+            Toast.show({
+                type: 'error',
+                text1: 'Erreur',
+                text2: "une erreur est survenue lors de l'export",
+            })
+            return
+        }
+
+        console.log("Erreur récupération token refresh:", error)
+        if (error.message?.includes('status: 401') && retryOnce) {
+            console.log("Récupération d'un refresh_token...")
+            const newAccessToken = await refreshAccessToken()
+            if (newAccessToken) {
+                exportToExcel(debut, fin, false)
+            }
+        }
+
+        Toast.show({
+            type: 'error',
+            text1: 'Erreur',
+            text2: "une erreur est survenue lors de l'export",
+        })
+        
+        await removeTokens()
+        router.replace("/(auth)")    
+    }
 }
-
-const arrayBufferToBase64 = (buffer: ArrayBuffer): string => {
-  const bytes = new Uint8Array(buffer);
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
-  let result = '';
-  let i = 0;
-
-  while (i < bytes.length) {
-    const a = bytes[i++];
-    const b = i < bytes.length ? bytes[i++] : 0;
-    const c = i < bytes.length ? bytes[i++] : 0;
-
-    const bitmap = (a << 16) | (b << 8) | c;
-
-    result += chars[(bitmap >> 18) & 63];
-    result += chars[(bitmap >> 12) & 63];
-    result += (i - 2 < bytes.length ? chars[(bitmap >> 6) & 63] : '=');
-    result += (i - 1 < bytes.length ? chars[bitmap & 63] : '=');
-  }
-
-  return result;
-};
