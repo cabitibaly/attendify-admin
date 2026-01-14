@@ -2,9 +2,12 @@ import CustomDateTimePicker from '@/components/datepicker/date-time-picker'
 import { useFetchListSites } from '@/hooks/sites/useFetchSite'
 import DEV_API_URL from '@/utils/api'
 import { authenticatedRequest } from '@/utils/authUtils'
+import { checkLocationPermission } from '@/utils/location'
+import { hasPermissionBeenAsked } from '@/utils/storage'
+import * as Location from 'expo-location'
 import { router } from 'expo-router'
 import { ChevronLeft } from 'lucide-react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ActivityIndicator, ImageBackground, KeyboardAvoidingView, Platform, Pressable, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import Toast from 'react-native-toast-message'
 
@@ -29,6 +32,24 @@ const NouveauSite = () => {
         return date;
     }
 
+    useEffect(() => {
+
+        (async () => {
+            const locationAsked = await hasPermissionBeenAsked('LOCATION_PERMISSION_kEY');
+            const locationGranted = await checkLocationPermission();
+
+            if (!locationAsked && !locationGranted) return;
+
+            const location = await Location.getCurrentPositionAsync({
+                accuracy: Location.Accuracy.High
+            })
+
+            setLatitude(location.coords.latitude.toString())
+            setLongitude(location.coords.longitude.toString())
+        })();
+
+    }, []);
+
     const creerSite = async () => { 
         if (!site) {
             Toast.show({
@@ -52,7 +73,7 @@ const NouveauSite = () => {
             Toast.show({
                 type: 'error',
                 text1: 'Erreur',
-                text2: "Veuillez ajouter une latitude et une longitude",
+                text2: "Veuillez ajouter une latitude et une longitude ou autoriser l'accès à votre position",
             })
             return;
         }

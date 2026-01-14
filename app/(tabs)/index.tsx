@@ -15,7 +15,6 @@ import { Pointage } from '@/interfaces/pointage'
 import { checkLocationPermission } from '@/utils/location'
 import { checkNotificationPermisison } from '@/utils/notification'
 import { hasPermissionBeenAsked } from '@/utils/storage'
-import * as Location from 'expo-location'
 import { router } from 'expo-router'
 import { Percent } from 'lucide-react-native'
 import React, { useEffect, useRef, useState } from 'react'
@@ -32,7 +31,7 @@ const Accueil = () => {
 
     useEffect(() => {        
         (async () => {
-            // Vérifier la permission de notification en premier
+                        
             const notifAsked = await hasPermissionBeenAsked('NOTIFICATION_PERMISSION_kEY');
             const notifGranted = await checkNotificationPermisison();                            
 
@@ -40,17 +39,12 @@ const Accueil = () => {
                 setTimeout(() => notifBottomSheetRef.current?.open(), 500);                
             }
 
-            // Ensuite vérifier la permission de localisation
             const locationAsked = await hasPermissionBeenAsked('LOCATION_PERMISSION_kEY');
             const locationGranted = await checkLocationPermission();
 
             if (!locationAsked && !locationGranted) {
                 setTimeout(() => locationBottomSheetRef.current?.open(), 500);
             }
-
-            const location = await Location.getCurrentPositionAsync({
-                accuracy: Location.Accuracy.High
-            });
 
         })();
     }, []);
