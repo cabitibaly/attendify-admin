@@ -2,6 +2,7 @@ import PointageCard from '@/components/card/pointageCard'
 import CustomBottomSheet, { CustomBottomSheetRef } from '@/components/custom-bottom-sheet/customBottomSheet'
 import RenderFooter from '@/components/footer/renderFooter'
 import Loading from '@/components/loading/loading'
+import LocationPermission from '@/components/permission/location-permission'
 import NotificationPermission from '@/components/permission/notification-permission'
 import AlarmOffIcon from '@/components/svg/AlarmOffIcon'
 import BellIcon from '@/components/svg/bellIcon'
@@ -11,35 +12,48 @@ import { useAuth } from '@/hooks/auth/useAuth'
 import { useFetchListNotification } from '@/hooks/notification/useFetchNotification'
 import { useFetchPointage, useFetchStats } from '@/hooks/pointage/useFetchPointage'
 import { Pointage } from '@/interfaces/pointage'
+import { checkLocationPermission } from '@/utils/location'
 import { checkNotificationPermisison } from '@/utils/notification'
 import { hasPermissionBeenAsked } from '@/utils/storage'
+import * as Location from 'expo-location'
 import { router } from 'expo-router'
 import { Percent } from 'lucide-react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import { FlatList, Pressable, RefreshControl, Text, TouchableOpacity, View } from 'react-native'
 
 const Accueil = () => {
-    const [pointageList, setPointageList] = useState<Pointage[]>([])
-    const notifBottomSheetRef = useRef<CustomBottomSheetRef>(null);
+    const [pointageList, setPointageList] = useState<Pointage[]>([])    
     const { utilisateur } = useAuth();
     const { stats } = useFetchStats();  
     const { pointages, isFetchingNextPage, isLoading, handleLoadMore, refetch }  = useFetchPointage();
     const { hasNoReadNotifications } = useFetchListNotification();
+    const notifBottomSheetRef = useRef<CustomBottomSheetRef>(null);
+    const locationBottomSheetRef = useRef<CustomBottomSheetRef>(null);
 
     useEffect(() => {        
+        (async () => {
+            // Vérifier la permission de notification en premier
+            const notifAsked = await hasPermissionBeenAsked('NOTIFICATION_PERMISSION_kEY');
+            const notifGranted = await checkNotificationPermisison();                            
 
-        (
-            async () => {
-                const asked = await hasPermissionBeenAsked();
-                const granted = await checkNotificationPermisison();                            
-
-                if (!asked && !granted) {
-                    setTimeout(() => notifBottomSheetRef.current?.open(), 500);
-                }
+            if (!notifAsked && !notifGranted) {
+                setTimeout(() => notifBottomSheetRef.current?.open(), 500);                
             }
-        )()                
 
-    }, [])
+            // Ensuite vérifier la permission de localisation
+            const locationAsked = await hasPermissionBeenAsked('LOCATION_PERMISSION_kEY');
+            const locationGranted = await checkLocationPermission();
+
+            if (!locationAsked && !locationGranted) {
+                setTimeout(() => locationBottomSheetRef.current?.open(), 500);
+            }
+
+            const location = await Location.getCurrentPositionAsync({
+                accuracy: Location.Accuracy.High
+            });
+
+        })();
+    }, []);
 
     useEffect(() => {
 
@@ -146,6 +160,15 @@ const Accueil = () => {
             >   
                 <NotificationPermission 
                     onClose={ () => {notifBottomSheetRef.current?.close()}}
+                />
+            </CustomBottomSheet>
+            <CustomBottomSheet 
+                ref={locationBottomSheetRef}
+                onClose={() => console.log('Fermé')}
+                snapPoints={["47%"]}
+            >   
+                <LocationPermission 
+                    onClose={ () => {locationBottomSheetRef.current?.close()}}
                 />
             </CustomBottomSheet>
         </View>

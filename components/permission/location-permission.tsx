@@ -1,36 +1,35 @@
-import { requestNotificationPermission } from '@/utils/notification';
+import { requestLocationPermission } from '@/utils/location';
 import { makePermissionAsked } from '@/utils/storage';
 import { BottomSheetView } from '@gorhom/bottom-sheet';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import Toast from 'react-native-toast-message';
-import BellIcon from '../svg/bellIcon';
+import LocationIcon from '../svg/locationIcon';
 
 interface NotificationPermissionProps {
     onClose: () => void;
 }
 
-const NotificationPermission = ({ onClose }: NotificationPermissionProps) => {
+const LocationPermission = ({ onClose }: NotificationPermissionProps) => {
     
     const handleAllow = async () => {
-        const granted = await requestNotificationPermission()        
+        const granted = await requestLocationPermission()
+        await makePermissionAsked('LOCATION_PERMISSION_kEY');
 
         onClose();        
 
         if (granted) {
-            await makePermissionAsked('NOTIFICATION_PERMISSION_kEY');
-
             Toast.show({
                 type: 'success',
                 text1: 'Autorisation',
-                text2: `Vous avez autorisé Attendify à vous envoyer des notifications importantes.`,
+                text2: `Vous avez autorisé Attendify à accéder à votre position.`,
             });
             
         } else {
             Toast.show({
                 type: 'error',
                 text1: 'Autorisation',
-                text2: `Vous n'avez pas autorisé Attendify à vous envoyer des notifications importantes.`,
+                text2: `Vous n'avez pas autorisé Attendify à accéder à votre position.`,
             });
         }        
     }
@@ -42,12 +41,12 @@ const NotificationPermission = ({ onClose }: NotificationPermissionProps) => {
         >
             <View className='w-full flex-col items-center justify-between gap-6'>
                 <View className='size-20 bg-violet-8 rounded-full items-center justify-center'>
-                    <BellIcon size={28} color="#EEEEF0" />
+                    <LocationIcon size={28} color="#EEEEF0" />
                 </View>
                 <View className='w-full flex-col items-center justify-center gap-4'>
-                    <Text className='text-gris-1 text-3xl text-center font-bold'>Activer les notifications</Text>
+                    <Text className='text-gris-1 text-3xl text-center font-bold'>Activer la localisation</Text>
                     <Text className='text-gris-1 text-xl text-center font-normal'>
-                        Autorisez Attendify à vous envoyer des notifications importantes.
+                        Autorisez Attendify à acceder à votre position. Il sera utilisé lors de l&apos;enregistrement de vos sites.
                     </Text>
                 </View>
                 <View className='w-full flex-col items-center justify-center gap-1'>
@@ -63,4 +62,4 @@ const NotificationPermission = ({ onClose }: NotificationPermissionProps) => {
     )
 }
 
-export default NotificationPermission
+export default LocationPermission
