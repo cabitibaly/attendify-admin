@@ -9,7 +9,7 @@ import { router } from 'expo-router'
 import { useLocalSearchParams } from 'expo-router/build/hooks'
 import { ChevronLeft } from 'lucide-react-native'
 import React, { useState } from 'react'
-import { Image, ImageBackground, Pressable, Text, TouchableOpacity, View } from 'react-native'
+import { Image, ImageBackground, Pressable, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import Toast from 'react-native-toast-message'
 
 interface ChangerStatutResponse {
@@ -70,56 +70,63 @@ const DetailConge = () => {
                         <Loading />
                         :
                         <>
-                            <View className='flex-row items-center justify-between w-full'>
-                                <View className='flex-row items-center justify-center gap-3'>
-                                    <View className='overflow-hidden size-14 rounded-full bg-violet-8'>
-                                        {
-                                            conge?.utilisateur.image ?
-                                                <Image className='size-14 rounded-full' source={{ uri: conge?.utilisateur.image }} /> 
-                                                : 
-                                                <Text className='text-2xl text-gris-12 font-bold'>
-                                                    {conge?.utilisateur.nom.charAt(0).toUpperCase()}
-                                                </Text>
-                                        }                        
-                                    </View>
-                                    <View className='flex-col items-start justify-start'>
-                                        <Text className='text-xl text-gris-12 font-medium line-clamp-1'>{conge?.utilisateur.nom} {conge?.utilisateur.prenom}</Text>
-                                        <Text className='text-base text-gris-11 font-regular line-clamp-1'>{conge?.utilisateur.poste}</Text>                    
-                                    </View>                
-                                </View>
-                                <View style={{backgroundColor: statusBg(conge?.statutConge || ""),}} className='rounded-lg p-2 items-center justify-center'>
-                                    <Text style={{color: statusColor(conge?.statutConge || "")}} className='text-sm font-semibold'>{statusText(conge?.statutConge || "")}</Text>
-                                </View>
-                            </View>   
-                            <View className='w-full flex-col gap-2'>
-                                <Text className='text-xl text-gris-11 font-regular line-clamp-1'>Date</Text>
-                                <Text className='text-xl text-gris-12 font-medium'>
-                                    {new Date(conge?.dateDepart || "").toLocaleDateString('fr-FR', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })} - {new Date(conge?.dateRetour || "").toLocaleDateString('fr-FR', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })}
-                                </Text>                    
-                            </View> 
-                            <View className='w-full flex-col gap-2'>
-                                <Text className='text-xl text-gris-11 font-regular line-clamp-1'>Type de congé</Text>
-                                <Text className='text-xl text-gris-12 font-medium'>{conge?.typeConge || "-"}</Text>                   
-                            </View> 
-                            <View className='w-full flex-col gap-2'>
-                                <Text className='text-xl text-gris-11 font-regular line-clamp-1'>Raison</Text>
-                                <Text className='text-xl text-gris-12 font-medium'>{conge?.raison || "-"}</Text>                   
-                            </View>
-                            <View className='w-full flex-col items-start justify-start gap-2'>
-                                <Text className='text-xl text-gris-11 font-regular'>Pièce jointe</Text>
-                                {
-                                    conge?.pieceJointe ?
-                                        <View className='p-3 rounded-xl bg-violet-5/50 w-full flex-row items-center justify-start gap-2'>
-                                            <PDFIcon />
-                                            <View className='flex-col items-start justify-start gap-0'>
-                                                <Text className='text-base text-gris-12 font-regukar line-clamp-1'>{conge?.pieceJointe}</Text>
-                                                <Text className='text-base text-gris-8 font-medium'>1.1 MB</Text>
-                                            </View>
+                            <ScrollView 
+                                showsVerticalScrollIndicator={false}
+                                contentContainerStyle={{
+                                    gap: 32
+                                }}
+                            >
+                                <View className='flex-row items-center justify-between w-full'>
+                                    <View className='flex-row items-center justify-center gap-3'>
+                                        <View className='overflow-hidden size-14 rounded-full bg-violet-8'>
+                                            {
+                                                conge?.utilisateur.image ?
+                                                    <Image className='size-14 rounded-full' source={{ uri: conge?.utilisateur.image }} /> 
+                                                    : 
+                                                    <Text className='text-2xl text-gris-12 font-bold'>
+                                                        {conge?.utilisateur.nom.charAt(0).toUpperCase()}
+                                                    </Text>
+                                            }                        
                                         </View>
-                                        :
-                                        <Text className='text-xl text-gris-12 font-medium'>{"-"}</Text>                   
-                                }
-                            </View>
+                                        <View className='flex-col items-start justify-start'>
+                                            <Text className='text-xl text-gris-12 font-medium line-clamp-1'>{conge?.utilisateur.nom} {conge?.utilisateur.prenom}</Text>
+                                            <Text className='text-base text-gris-11 font-regular line-clamp-1'>{conge?.utilisateur.poste}</Text>                    
+                                        </View>                
+                                    </View>
+                                    <View style={{backgroundColor: statusBg(conge?.statutConge || ""),}} className='rounded-lg p-2 items-center justify-center'>
+                                        <Text style={{color: statusColor(conge?.statutConge || "")}} className='text-sm font-semibold'>{statusText(conge?.statutConge || "")}</Text>
+                                    </View>
+                                </View>   
+                                <View className='w-full flex-col gap-2'>
+                                    <Text className='text-xl text-gris-11 font-regular line-clamp-1'>Date</Text>
+                                    <Text className='text-xl text-gris-12 font-medium'>
+                                        {new Date(conge?.dateDepart || "").toLocaleDateString('fr-FR', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })} - {new Date(conge?.dateRetour || "").toLocaleDateString('fr-FR', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })}
+                                    </Text>                    
+                                </View> 
+                                <View className='w-full flex-col gap-2'>
+                                    <Text className='text-xl text-gris-11 font-regular line-clamp-1'>Type de congé</Text>
+                                    <Text className='text-xl text-gris-12 font-medium'>{conge?.typeConge || "-"}</Text>                   
+                                </View> 
+                                <View className='w-full flex-col gap-2'>
+                                    <Text className='text-xl text-gris-11 font-regular line-clamp-1'>Raison</Text>
+                                    <Text className='text-xl text-gris-12 font-medium'>{conge?.raison || "-"}</Text>                   
+                                </View>
+                                <View className='w-full flex-col items-start justify-start gap-2'>
+                                    <Text className='text-xl text-gris-11 font-regular'>Pièce jointe</Text>
+                                    {
+                                        conge?.pieceJointe ?
+                                            <View className='p-3 rounded-xl bg-violet-5/50 w-full flex-row items-center justify-start gap-2'>
+                                                <PDFIcon />
+                                                <View className='flex-col items-start justify-start gap-0'>
+                                                    <Text className='text-base text-gris-12 font-regukar line-clamp-1'>{conge?.pieceJointe}</Text>
+                                                    <Text className='text-base text-gris-8 font-medium'>1.1 MB</Text>
+                                                </View>
+                                            </View>
+                                            :
+                                            <Text className='text-xl text-gris-12 font-medium'>{"-"}</Text>                   
+                                    }
+                                </View>                            
+                            </ScrollView>
                             {    
                                 conge?.statutConge === "EN_ATTENTE" &&
                                 <View className='absolute left-4 bottom-8 w-full flex-row items-center justify-between gap-4'>
@@ -148,7 +155,8 @@ const DetailConge = () => {
                                 nomEmp={conge?.utilisateur.nom}
                                 prenomEmp={conge?.utilisateur.prenom}
                             />
-                        </> 
+                        </>
+
             }
         </ImageBackground>        
     )

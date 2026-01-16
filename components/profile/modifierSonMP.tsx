@@ -33,7 +33,7 @@ const ModifierSonMP = ({onClose}: {onClose: () => void}) => {
             return;
         }
 
-        if (nouveau.length !== 8) {
+        if (nouveau.length < 8) {
             Toast.show({
                 type: 'error',
                 text1: 'Erreur',

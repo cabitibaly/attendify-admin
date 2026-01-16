@@ -19,7 +19,7 @@ const Historique = () => {
     const [dateFin, setDateFin] = useState<string>('')
     const [isLoadingExport, setIsLoadingExport] = useState(false);
     const bottomSheetRef = useRef<CustomBottomSheetRef>(null);
-    const { pointages, isFetchingNextPage, isLoading, refetch }  = useFetchPointage(selected == "", new Date(selected).toISOString());    
+    const { pointages, isFetchingNextPage, handleLoadMore, isLoading, refetch }  = useFetchPointage(selected == "", new Date(selected).toISOString());    
 
     const handleExport = async () => {
         setIsLoadingExport(true);    
@@ -66,6 +66,7 @@ const Historique = () => {
                                     contentContainerStyle={{paddingBottom: 88}}
                                     ListFooterComponent={<RenderFooter isFetchingNextPage={isFetchingNextPage} />}
                                     ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
+                                    onEndReached={handleLoadMore}
                                     showsVerticalScrollIndicator={false}
                                     initialNumToRender={10}
                                     maxToRenderPerBatch={10}
