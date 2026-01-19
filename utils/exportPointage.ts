@@ -1,9 +1,10 @@
 import { Directory, File, Paths } from 'expo-file-system';
+import * as FileSystem from 'expo-file-system/legacy';
 import { router } from 'expo-router';
-import * as Sharing from 'expo-sharing';
 import Toast from 'react-native-toast-message';
 import DEV_API_URL from './api';
 import { getToken, refreshAccessToken, removeTokens } from './authUtils';
+import { openFile } from './downloadFile';
 
 export const exportToExcel = async (debut: string, fin: string, retryOnce = true) => {
 
@@ -21,8 +22,21 @@ export const exportToExcel = async (debut: string, fin: string, retryOnce = true
 
     try {
         
-        const cacheDir = new Directory(Paths.cache, 'temp');    
-        cacheDir.create();
+        const cacheDir = new Directory(Paths.cache); 
+
+        if (!cacheDir.exists) {
+            cacheDir.create();
+        }
+
+        const filename = `pointages_${debutParsed.split("T")[0]}_${finParsed.split("T")[0]}.xlsx`;        
+
+        const file = new File(cacheDir, filename);
+            
+        if (file.exists) { 
+            const contentUri = await FileSystem.getContentUriAsync(file.uri);
+            await openFile(contentUri);
+            return;
+        }
 
         const tempFile = await File.downloadFileAsync(
             `${DEV_API_URL}/pointage/export?debut=${debutParsed}&fin=${finParsed}`, 
@@ -32,9 +46,8 @@ export const exportToExcel = async (debut: string, fin: string, retryOnce = true
             }
         );
         
-        await Sharing.shareAsync(tempFile.uri);
-
-        cacheDir.delete();    
+        const contentUri = await FileSystem.getContentUriAsync(file.uri);
+        await openFile(contentUri);
 
     } catch (error: any) {
 
@@ -44,6 +57,7 @@ export const exportToExcel = async (debut: string, fin: string, retryOnce = true
                 text1: 'Erreur',
                 text2: "une erreur est survenue lors de l'export",
             })
+            console.log("une erreur est survenue:", error)
             return
         }
 

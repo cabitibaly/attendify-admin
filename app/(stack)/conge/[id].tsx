@@ -5,11 +5,12 @@ import PDFIcon from '@/components/svg/pdfIcon'
 import { useFetchConge } from '@/hooks/conge/useFetchConge'
 import DEV_API_URL from '@/utils/api'
 import { authenticatedRequest } from '@/utils/authUtils'
+import { downloadAndGetFileSize, openFile } from '@/utils/downloadFile'
 import { router } from 'expo-router'
 import { useLocalSearchParams } from 'expo-router/build/hooks'
 import { ChevronLeft } from 'lucide-react-native'
-import React, { useState } from 'react'
-import { Image, ImageBackground, Pressable, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { ActivityIndicator, Image, ImageBackground, Pressable, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import Toast from 'react-native-toast-message'
 
 interface ChangerStatutResponse {
@@ -22,6 +23,9 @@ const DetailConge = () => {
     const [modalVisible, setModalVisible] = useState<boolean>(false)
     const [statut, setStatut] = useState<number | null>(null)
     const [isLoadingRequest, setIsLoadingRequest] = useState<boolean>(false)
+    const [size, setSize] = useState<number | null>(null);
+    const [uri, setUri] = useState<string | null>(null);
+    const [isLoadingPdf, setIsLoadingPdf] = useState<boolean>(false);
     const { conge, isLoading, refetch } = useFetchConge(Number(id))
 
     const handleClick = async (s: number) => {
@@ -52,6 +56,18 @@ const DetailConge = () => {
         setModalVisible(true)
         setStatut(s)
     }
+
+    useEffect(() => {
+
+        (async () => {
+            if (conge?.pieceJointe) {
+                const result = await downloadAndGetFileSize(conge.pieceJointeURL, setIsLoadingPdf);
+                setSize(result?.size!);
+                setUri(result?.uri!);
+            }
+        })()
+
+    }, [conge])  
 
     return (
         <ImageBackground
@@ -111,21 +127,38 @@ const DetailConge = () => {
                                     <Text className='text-xl text-gris-11 font-regular line-clamp-1'>Raison</Text>
                                     <Text className='text-xl text-gris-12 font-medium'>{conge?.raison || "-"}</Text>                   
                                 </View>
-                                <View className='w-full flex-col items-start justify-start gap-2'>
+                                <TouchableOpacity 
+                                    onPress={async () => openFile(uri as string)}
+                                    disabled={isLoadingPdf}
+                                    activeOpacity={0.8}
+                                    className='w-full flex-col items-start justify-start gap-2'
+                                >
                                     <Text className='text-xl text-gris-11 font-regular'>Pièce jointe</Text>
                                     {
-                                        conge?.pieceJointe ?
-                                            <View className='p-3 rounded-xl bg-violet-5/50 w-full flex-row items-center justify-start gap-2'>
-                                                <PDFIcon />
-                                                <View className='flex-col items-start justify-start gap-0'>
-                                                    <Text className='text-base text-gris-12 font-regukar line-clamp-1'>{conge?.pieceJointe}</Text>
-                                                    <Text className='text-base text-gris-8 font-medium'>1.1 MB</Text>
-                                                </View>
-                                            </View>
+                                        conge?.pieceJointe ?                                        
+                                            <TouchableOpacity 
+                                                onPress={async() => await openFile(uri as string)} 
+                                                disabled={isLoading} 
+                                                activeOpacity={0.8} 
+                                                className='p-3 rounded-xl bg-violet-5/50 w-full flex-row items-center justify-start gap-2'
+                                            >
+                                                {  
+                                                    isLoadingPdf ? 
+                                                        <ActivityIndicator size={24} color="#EEEEF0" />
+                                                        :
+                                                        <>
+                                                            <PDFIcon />
+                                                            <View className='flex-col items-start justify-start gap-0'>
+                                                                <Text className='text-base text-gris-12 font-regukar line-clamp-1'>{conge?.pieceJointe}</Text>
+                                                                <Text className='text-base text-gris-8 font-medium'>{size && `${(size / (1024 * 1024)).toFixed(2)} MB`}</Text>
+                                                            </View>
+                                                        </>
+                                                }
+                                            </TouchableOpacity>
                                             :
                                             <Text className='text-xl text-gris-12 font-medium'>{"-"}</Text>                   
                                     }
-                                </View>                            
+                                </TouchableOpacity>                            
                             </ScrollView>
                             {    
                                 conge?.statutConge === "EN_ATTENTE" &&
