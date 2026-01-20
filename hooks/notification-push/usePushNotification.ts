@@ -17,6 +17,21 @@ Notifications.setNotificationHandler({
     }),
 })
 
+const convertTypeToString = (type: Device.DeviceType | null): string => {
+    switch (type) {
+        case Device.DeviceType.PHONE:
+            return "PHONE";
+        case Device.DeviceType.TABLET:
+            return "TABLET";
+        case Device.DeviceType.DESKTOP:
+            return "DESKTOP";
+        case Device.DeviceType.TV:
+            return "TV";
+        default:
+            return "UNKNOWN";
+    }
+}
+
 export const usePushNotification = () => {
     const [expoPushToken, setExpoPushToken] = useState<string>('');
 
@@ -27,7 +42,7 @@ export const usePushNotification = () => {
             data: { 
                 "push_token": token,
                 "platform": Platform.OS,
-                "device_type": Device.DeviceType,                
+                "device_type": convertTypeToString(Device.deviceType),                
                 "device_name": Device.deviceName,            
             }
         })        
@@ -56,7 +71,7 @@ export const usePushNotification = () => {
             if (!Device.isDevice) return null;
 
             try {
-                const asked = await hasPermissionBeenAsked();
+                const asked = await hasPermissionBeenAsked("NOTIFICATION_PERMISSION_kEY");
                 const granted = await checkNotificationPermisison();
 
                 if (!asked && !granted) return null;

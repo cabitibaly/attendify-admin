@@ -9,6 +9,7 @@ import BellIcon from '@/components/svg/bellIcon'
 import UserRemoveIcon from '@/components/svg/userRemovedIcon'
 import UserVerifiedIcon from '@/components/svg/UserVerifiedIcon'
 import { useAuth } from '@/hooks/auth/useAuth'
+import { usePushNotification } from '@/hooks/notification-push/usePushNotification'
 import { useFetchListNotification } from '@/hooks/notification/useFetchNotification'
 import { useFetchPointage, useFetchStats } from '@/hooks/pointage/useFetchPointage'
 import { Pointage } from '@/interfaces/pointage'
@@ -25,7 +26,8 @@ const Accueil = () => {
     const { utilisateur } = useAuth();
     const { stats } = useFetchStats();  
     const { pointages, isFetchingNextPage, isLoading, handleLoadMore, refetch }  = useFetchPointage();
-    const { hasNoReadNotifications } = useFetchListNotification();
+    const { hasNoReadNotifications } = useFetchListNotification();  
+    const { expoPushToken, enregistrerPushToken } = usePushNotification();  
     const notifBottomSheetRef = useRef<CustomBottomSheetRef>(null);
     const locationBottomSheetRef = useRef<CustomBottomSheetRef>(null);
 
@@ -56,6 +58,14 @@ const Accueil = () => {
         }
 
     }, [pointages])
+
+    useEffect(() => {
+
+        if (expoPushToken) {
+            enregistrerPushToken(expoPushToken);
+        }            
+
+    }, [expoPushToken])
 
     return (
         <View className="px-4 py-4 pt-10 pb-4 flex-1 items-center justify-start gap-6">
