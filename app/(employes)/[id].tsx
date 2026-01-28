@@ -134,7 +134,7 @@ const DetailEmploye = () => {
                             <Text className='text-xl text-gris-11 font-regular'>Site</Text>
                             <View className='w-full flex-row items-center justify-between gap-4'>
                                 <Text className='text-2xl text-gris-12 font-medium line-clamp-1'>{employe?.site.site || "-"}</Text>
-                                <TouchableOpacity onPress={editBottomSheetRef.current?.open} activeOpacity={0.8} className='size-10 rounded-full bg-violet-9 items-center justify-center'>
+                                <TouchableOpacity onPress={() => editBottomSheetRef.current?.open()} activeOpacity={0.8} className='size-10 rounded-full bg-violet-9 items-center justify-center'>
                                     <EditIcon size={20} color='#EEEEF0' />
                                 </TouchableOpacity>
                             </View>                            

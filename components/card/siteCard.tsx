@@ -1,6 +1,7 @@
 import { useFetchListSites } from '@/hooks/sites/useFetchSite';
 import { Site } from '@/interfaces/site';
 import DEV_API_URL from '@/utils/api';
+import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import SupprimerModal from '../modal/supprimerModal';
@@ -15,7 +16,7 @@ const SiteCard = ({site}: SiteCardProps) => {
 
     return (
         <>
-            <TouchableOpacity onPress={() => setModalVisible(true)} activeOpacity={0.9} className='border border-violet-10 bg-violet-5/70 p-4 rounded-xl w-full flex-col items-start justify-start gap-2'>
+            <TouchableOpacity onPress={() => router.push(`/(site)/${site.id}`)} activeOpacity={0.9} className='border border-violet-10 bg-violet-5/70 p-4 rounded-xl w-full flex-col items-start justify-start gap-2'>
                 <Text className='text-xl text-gris-12 font-bold'>{site.site}</Text>
                 <View className='flex-1 flex-row items-start justify-start gap-2'>                                    
                     <View className='bg-violet-10 rounded-lg p-2 items-center justify-center'>

@@ -1,6 +1,6 @@
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { Clock4 } from 'lucide-react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Platform, Text, TouchableOpacity, View } from 'react-native';
 
 interface DatePickerProps {
@@ -30,6 +30,12 @@ const CustomDateTimePicker = ({ onDateChange, defaultTime }: DatePickerProps) =>
             minute: '2-digit'
         });
     };
+
+    useEffect(() => {
+
+        setTime(defaultTime);
+        
+    }, [defaultTime]);
 
     return (
         <View className='relative w-full'>

@@ -16,6 +16,12 @@ interface NewSiteResponse {
     status: number
 }
 
+export const defaultTimeFormat = (h: number, m: number): Date => {
+    const date = new Date();
+    date.setHours(h, m, 0, 0);
+    return date;
+}
+
 const NouveauSite = () => {    
     const [heureDebut, setHeureDebut] = useState<Date>(new Date());
     const [heureFin, setHeureFin] = useState<Date>(new Date());
@@ -25,12 +31,6 @@ const NouveauSite = () => {
     const [longitude, setLongitude] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const { refetch } = useFetchListSites();
-
-    const defaultTimeFormat = (h: number, m: number): Date => {
-        const date = new Date();
-        date.setHours(h, m, 0, 0);
-        return date;
-    }
 
     useEffect(() => {
 
@@ -47,6 +47,9 @@ const NouveauSite = () => {
             setLatitude(location.coords.latitude.toString())
             setLongitude(location.coords.longitude.toString())
         })();
+
+        setHeureDebut(defaultTimeFormat(8, 0));
+        setHeureFin(defaultTimeFormat(16, 0));
 
     }, []);
 

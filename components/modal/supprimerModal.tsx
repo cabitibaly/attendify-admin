@@ -38,6 +38,7 @@ const SupprimerModal = ({ title, paragraph, url, visible, onClose, goBack = fals
                     text1: 'Suppression',
                     text2: data.message,
                 })
+                
                 if (goBack) {
                     router.back()
                 }

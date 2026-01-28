@@ -3,11 +3,15 @@ import RenderFooter from '@/components/footer/renderFooter'
 import { useFetchListSites } from '@/hooks/sites/useFetchSite'
 import { router } from 'expo-router'
 import { ChevronLeft, Plus } from 'lucide-react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { FlatList, ImageBackground, Pressable, RefreshControl, Text, View } from 'react-native'
 
 const ListeDesSites = () => {
     const { sites, isLoading, isFetchingNextPage, handleLoadMore, refetch } = useFetchListSites()
+
+    useEffect(() => {
+        refetch()
+    }, [sites])
 
     return (
         <ImageBackground

@@ -57,7 +57,7 @@ export const useFetchSite = (id: number) => {
     const { data, isLoading, refetch, isError } = useQuery<SiteResponse | null>({
         queryKey: ['site', id],
         queryFn: async () => await authenticatedRequest<SiteResponse>({
-            url: `${DEV_API_URL}/site/${id}`,
+            url: `${DEV_API_URL}/site/tous-les-sites/${id}`,
             method: 'GET',
         }),        
         staleTime: 5 * 60 * 1000,
