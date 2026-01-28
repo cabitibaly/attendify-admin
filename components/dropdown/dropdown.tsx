@@ -8,6 +8,7 @@ import RenderFooter from '../footer/renderFooter';
 interface DropdownProps {
     setSite: React.Dispatch<React.SetStateAction<number | null>>;
     site: number | null;
+    inBottomSheet?: boolean;
 }
 
 const typeConge = [
@@ -19,7 +20,7 @@ const typeConge = [
     {id: 6, nom: "Congé de sabbatique"},
 ]
 
-const Dropdown = ({site, setSite}: DropdownProps) => {
+const Dropdown = ({site, setSite, inBottomSheet = false}: DropdownProps) => {
     const [visible, setVisible] = useState<boolean>(false);
     const [isActive, setIsActive] = useState<boolean>(false);
     const [selected, setSelected] = useState<string>('');
@@ -41,7 +42,7 @@ const Dropdown = ({site, setSite}: DropdownProps) => {
         setIsActive(false);
     }
 
-    const handleChangeType = (s: Site) => {
+    const handleChangeSite = (s: Site) => {
         setSite(s.id);
         setSelected(s.site);
         handleClose();
@@ -55,7 +56,8 @@ const Dropdown = ({site, setSite}: DropdownProps) => {
                 style={{
                     borderStyle: 'solid', 
                     borderWidth: 1,
-                    borderColor: `${isActive ? '#7E45DC' : "transparent"}`
+                    borderColor: `${isActive ? '#7E45DC' : "transparent"}`,
+                    backgroundColor: `${inBottomSheet ? "#7541CD" : "rgb(68, 28, 127, 0.7)"}`
                 }} 
                 className='p-4 rounded-xl bg-violet-5/70 w-full flex-row items-center justify-between gap-3'
             >                
@@ -89,7 +91,7 @@ const Dropdown = ({site, setSite}: DropdownProps) => {
                                         marginTop: index == 0 ? 8 : 0,
                                     }}
                                     className='rounded-lg py-1.5 px-3 w-full mb-1'
-                                    onPress={() => handleChangeType(item)}
+                                    onPress={() => handleChangeSite(item)}
                                 >
                                     <Text className='text-gris-12 text-xl font-medium' >{item.site}</Text>
                                 </Pressable>
