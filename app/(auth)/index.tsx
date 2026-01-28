@@ -2,6 +2,7 @@ import Loading from '@/components/loading/loading';
 import { useAuth } from '@/hooks/auth/useAuth';
 import React, { useState } from 'react';
 import { ActivityIndicator, ImageBackground, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import Toast from 'react-native-toast-message';
 
 const Index = () => {
@@ -52,7 +53,17 @@ const Index = () => {
             resizeMode="cover"
             className="p-4 flex-1 items-center justify-center bg-violet-4"
         >
-            <View className='w-full flex-col items-center justify-center gap-8'>
+            <KeyboardAwareScrollView
+                enableOnAndroid
+                keyboardShouldPersistTaps="handled"
+                style={{ flex: 1, width: '100%' }}
+                contentContainerStyle={{
+                    flexGrow: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: 32,                    
+                }}
+            >
                 <Text className='text-4xl text-gris-12 font-bold'>Connecte-toi</Text>
                 <View className='w-full flex-col items-center justify-center gap-6'>
                     <View className='w-full flex-col items-start justify-center gap-2'>
@@ -76,7 +87,7 @@ const Index = () => {
                             <ActivityIndicator size={24} color="#EEEEF0" /> : <Text className='text-gris-12 text-xl font-semibold'>Se connecter</Text>
                     }
                 </TouchableOpacity>
-            </View>
+            </KeyboardAwareScrollView>
         </ImageBackground>
     )
 }
