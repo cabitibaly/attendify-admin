@@ -54,12 +54,12 @@ const ImagePicker = ({image, setImage}: FileUpdoaldProps) => {
 
     return (
         <View className='relative'>
-            <TouchableOpacity onPress={pickFile} activeOpacity={0.8} className=' overflow-hidden size-32 rounded-full bg-turquoise-8 items-center justify-center'>
+            <TouchableOpacity onPress={pickFile} activeOpacity={0.8} className='overflow-hidden size-32 rounded-full bg-violet-6 items-center justify-center'>
                 {
                     image ?
                         <Image className='size-full' source={{ uri: typeof image === "string" ? image : image.uri }} />
                         : 
-                        <Text className='bg-violet-6 text-gris-12 text-5xl font-bold'>
+                        <Text className='text-gris-12 text-5xl font-bold'>
                             C
                         </Text>
                 }            
