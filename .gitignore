@@ -44,4 +44,4 @@ app-example
 /android
 
 # google services
-# google-services.json
+google-services.json
