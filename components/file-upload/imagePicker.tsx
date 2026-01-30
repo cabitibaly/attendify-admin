@@ -59,7 +59,7 @@ const ImagePicker = ({image, setImage}: FileUpdoaldProps) => {
                     image ?
                         <Image className='size-full' source={{ uri: typeof image === "string" ? image : image.uri }} />
                         : 
-                        <Text className='text-gris-12 text-5xl font-bold'>
+                        <Text className='bg-violet-6 text-gris-12 text-5xl font-bold'>
                             C
                         </Text>
                 }            

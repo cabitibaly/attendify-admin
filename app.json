@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "administrateur",
+    "name": "Attendify Pro",
     "slug": "administrateur",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -53,7 +53,7 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "f291ccf8-150c-47e3-911f-1d9232f5b28d"
+        "projectId": "b2dcf49f-b8f6-4fd0-a0a5-c47d5ea71f21"
       }
     }
   }
