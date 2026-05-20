@@ -2,17 +2,26 @@ import * as Clipboard from 'expo-clipboard'
 import { X } from 'lucide-react-native'
 import React from 'react'
 import { Modal, Text, TouchableOpacity, View } from 'react-native'
+import Toast from 'react-native-toast-message'
 import RefreshIcon from '../svg/refreshIcon'
 
 interface PasswordPreviewModalProps {
     visible: boolean
-    onClose: () => void
+    onClose: () => void,
+    newPassword: string,
+    nomEmp: string | undefined,
+    prenomEmp: string | undefined,
 }
 
-const PasswordPreviewModal = ({ visible, onClose }: PasswordPreviewModalProps) => {
+const PasswordPreviewModal = ({ visible, onClose, newPassword, nomEmp, prenomEmp }: PasswordPreviewModalProps) => {
 
     const copier = async () => {
         await Clipboard.setStringAsync("ofiepassdmyvhcc")
+        Toast.show({
+            type: 'info',
+            text1: 'Copié',
+            text2: `Le mot de passe de ${nomEmp} ${prenomEmp} a été copié dans votre presse-papier.`,
+        })
     }
 
     return (
@@ -33,11 +42,11 @@ const PasswordPreviewModal = ({ visible, onClose }: PasswordPreviewModalProps) =
                         <View className='w-full flex-col gap-6 items-center justify-center'>
                             <Text className='text-gris-1 text-xl font-medium'>Mot de passe réinitialisé</Text>
                             <Text className='text-gris-8 text-base text-center font-regular'>
-                                Le mot de passe de Santa Dear a été réinitialisé avec succès.
+                                Le mot de passe de {`${nomEmp} ${prenomEmp}`} a été réinitialisé avec succès.
                                 Son nouveau mot de passe est :
                             </Text>
                             <TouchableOpacity onPress={copier} activeOpacity={0.8} className='py-4 rounded-xl w-full bg-gris-11/30 items-center justify-center'>
-                                <Text className='text-gris-1 text-base font-semibold'>ofiepassdmyvhcc</Text>
+                                <Text className='text-gris-1 text-base font-semibold'>{newPassword}</Text>
                             </TouchableOpacity>
                         </View>                        
                     </View> 

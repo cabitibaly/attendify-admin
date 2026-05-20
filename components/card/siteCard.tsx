@@ -1,22 +1,40 @@
-import React from 'react';
+import { useFetchListSites } from '@/hooks/sites/useFetchSite';
+import { Site } from '@/interfaces/site';
+import DEV_API_URL from '@/utils/api';
+import { router } from 'expo-router';
+import React, { useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import MapPinIcon2 from '../svg/mapPinIcon2';
+import SupprimerModal from '../modal/supprimerModal';
 
 interface SiteCardProps {
-    id: number;
-    nom: string;
-    position: string;
+    site: Site
 }
 
-const SiteCard = ({id, nom, position}: SiteCardProps) => {
+const SiteCard = ({site}: SiteCardProps) => {
+    const [modalVisible, setModalVisible] = useState<boolean>(false)
+    const { refetch } = useFetchListSites();
+
     return (
-        <TouchableOpacity activeOpacity={0.9} className='bg-violet-5/30 p-2.5 rounded-xl w-full flex-row items-start justify-start gap-2'>
-            <MapPinIcon2 size={24} color='#EEEEF0' />
-            <View className='flex-1 flex-col items-start justify-start gap-1'>                
-                <Text className='text-xl text-gris-12 font-medium'>{nom}</Text>
-                <Text className='text-base text-gris-11 font-medium'>{position}</Text>                
-            </View>            
-        </TouchableOpacity>
+        <>
+            <TouchableOpacity onPress={() => router.push(`/(site)/${site.id}`)} activeOpacity={0.9} className='border border-violet-10 bg-violet-5/70 p-4 rounded-xl w-full flex-col items-start justify-start gap-2'>
+                <Text className='text-xl text-gris-12 font-bold'>{site.site}</Text>
+                <View className='flex-1 flex-row items-start justify-start gap-2'>                                    
+                    <View className='bg-violet-10 rounded-lg p-2 items-center justify-center'>
+                        <Text className='text-gris-12 text-base font-semibold'>{site.heureDebut}</Text>
+                    </View>
+                    <View className='bg-violet-10 rounded-lg p-2 items-center justify-center'>
+                        <Text className='text-gris-12 text-base font-semibold'>{site.heureFin}</Text>
+                    </View>
+                </View>            
+            </TouchableOpacity>
+            <SupprimerModal 
+                visible={modalVisible}
+                onClose={() => {setModalVisible(false); refetch()}}
+                url={`${DEV_API_URL}/site/supprimer/${site.id}`}
+                title='Supprimer un site'
+                paragraph={`Êtes vous sûr de vouloir supprimer le site ${site.site} ?`}
+            />
+        </>
     )
 }
 

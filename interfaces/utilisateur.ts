@@ -15,8 +15,7 @@ export interface Utilisateur {
 }
 
 export interface LoginData {
-    telephone: string
-    email: string
+    username: string
     motDePasse: string
 }
 

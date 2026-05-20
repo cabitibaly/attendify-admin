@@ -1,3 +1,5 @@
+import DEV_API_URL from "@/utils/api";
+import { authenticatedRequest } from "@/utils/authUtils";
 import { checkNotificationPermisison } from "@/utils/notification";
 import { hasPermissionBeenAsked } from "@/utils/storage";
 import Constants from "expo-constants";
@@ -15,8 +17,43 @@ Notifications.setNotificationHandler({
     }),
 })
 
+const convertTypeToString = (type: Device.DeviceType | null): string => {
+    switch (type) {
+        case Device.DeviceType.PHONE:
+            return "PHONE";
+        case Device.DeviceType.TABLET:
+            return "TABLET";
+        case Device.DeviceType.DESKTOP:
+            return "DESKTOP";
+        case Device.DeviceType.TV:
+            return "TV";
+        default:
+            return "UNKNOWN";
+    }
+}
+
 export const usePushNotification = () => {
-    const [expoPushToken, setExpoPushToken] = useState<string>('');    
+    const [expoPushToken, setExpoPushToken] = useState<string>('');
+
+    const enregistrerPushToken = async (token: string): Promise<void> => {
+        await authenticatedRequest<{status: number, message: string}>({
+            url: `${DEV_API_URL}/notification-push`,
+            method: 'POST',
+            data: { 
+                "push_token": token,
+                "platform": Platform.OS,
+                "device_type": convertTypeToString(Device.deviceType),                
+                "device_name": Device.deviceName,            
+            }
+        })        
+    }
+
+    const supprimerPushToken = async (token: string): Promise<void> => {
+        await authenticatedRequest<{status: number, message: string}>({
+            url: `${DEV_API_URL}/notification-push/${token}`,
+            method: 'DELETE',
+        })
+    }
 
     useEffect(() => {
         const registerForPushNotificationsAsync = async () => {
@@ -34,7 +71,7 @@ export const usePushNotification = () => {
             if (!Device.isDevice) return null;
 
             try {
-                const asked = await hasPermissionBeenAsked();
+                const asked = await hasPermissionBeenAsked("NOTIFICATION_PERMISSION_kEY");
                 const granted = await checkNotificationPermisison();
 
                 if (!asked && !granted) return null;
@@ -59,5 +96,7 @@ export const usePushNotification = () => {
 
     return {
         expoPushToken,
+        enregistrerPushToken,
+        supprimerPushToken,
     }
 }

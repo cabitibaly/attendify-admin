@@ -4,6 +4,7 @@ import React from 'react'
 import { ImageBackground } from 'react-native'
 
 const TabLayout = () => {
+
     return (
         <ImageBackground
             source={require("../../assets/images/main-background.jpg")}

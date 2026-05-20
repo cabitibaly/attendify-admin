@@ -18,7 +18,7 @@ const NotificationPermission = ({ onClose }: NotificationPermissionProps) => {
         onClose();        
 
         if (granted) {
-            await makePermissionAsked();
+            await makePermissionAsked('NOTIFICATION_PERMISSION_kEY');
 
             Toast.show({
                 type: 'success',

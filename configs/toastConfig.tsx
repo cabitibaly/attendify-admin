@@ -1,6 +1,6 @@
 import { X } from 'lucide-react-native';
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 import Toast, { BaseToastProps } from 'react-native-toast-message';
 
 interface CustomToastProps extends BaseToastProps {
@@ -10,7 +10,7 @@ interface CustomToastProps extends BaseToastProps {
 
 const toastConfig = {
     error: ({ text1, text2 }: CustomToastProps) => (
-        <View style={{width: "93%", backgroundColor: "rgba(255, 20, 116, 0.9)", borderRadius: 12}} className="flex-col items-start justify-start gap-2 p-4">
+        <View style={{width: "93%", backgroundColor: "rgba(255, 20, 116, 0.95)", borderRadius: 12}} className="flex-col items-start justify-start gap-2 p-4">
             <View
                 style={{
                     width: "100%",
@@ -28,14 +28,7 @@ const toastConfig = {
                         gap: 8
                     }}
                 >
-                    <View 
-                        style={{
-                            width: 28,
-                            height: 28,
-                            borderRadius: "12%",
-                            backgroundColor: "#7E45DC",                        
-                        }}
-                    />
+                    <Image source={require("../assets/images/Icon_adm.png")} style={{width: 28, height: 28}} />
                     <Text style={{color: "#EEEEF0", fontSize: 16, fontWeight: "600"}}>ATTENDIFY</Text>   
                 </View>
 
@@ -62,7 +55,7 @@ const toastConfig = {
         </View>
     ),
     info: ({ text1, text2 }: CustomToastProps) => (
-        <View style={{width: "93%", backgroundColor: "rgba( 67, 0, 255, 0.8)", borderRadius: 12}} className="flex-col items-start justify-start gap-2 p-4">
+        <View style={{width: "93%", backgroundColor: "rgba( 67, 0, 255, 0.95)", borderRadius: 12}} className="flex-col items-start justify-start gap-2 p-4">
             <View
                 style={{
                     width: "100%",
@@ -80,14 +73,7 @@ const toastConfig = {
                         gap: 8
                     }}
                 >
-                    <View 
-                        style={{
-                            width: 28,
-                            height: 28,
-                            borderRadius: "12%",
-                            backgroundColor: "#7E45DC",                        
-                        }}
-                    />
+                    <Image source={require("../assets/images/Icon_adm.png")} style={{width: 28, height: 28}} />
                     <Text style={{color: "#EEEEF0", fontSize: 16, fontWeight: "600"}}>ATTENDIFY</Text>   
                 </View>
 
@@ -114,7 +100,7 @@ const toastConfig = {
         </View>
     ),
     success: ({ text1, text2 }: CustomToastProps) => (
-        <View style={{width: "93%", backgroundColor: "rgba(117, 65, 205, 0.9)", borderRadius: 12}} className="flex-col items-start justify-start gap-2 p-4">
+        <View style={{width: "93%", backgroundColor: "rgba(117, 65, 205, 0.95)", borderRadius: 12}} className="flex-col items-start justify-start gap-2 p-4">
             <View
                 style={{
                     width: "100%",
@@ -132,14 +118,7 @@ const toastConfig = {
                         gap: 8
                     }}
                 >
-                    <View 
-                        style={{
-                            width: 28,
-                            height: 28,
-                            borderRadius: "12%",
-                            backgroundColor: "#7E45DC",                        
-                        }}
-                    />
+                    <Image source={require("../assets/images/Icon_adm.png")} style={{width: 28, height: 28}} />
                     <Text style={{color: "#EEEEF0", fontSize: 16, fontWeight: "600"}}>ATTENDIFY</Text>   
                 </View>
 
